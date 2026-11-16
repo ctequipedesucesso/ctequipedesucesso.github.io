@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CT Equipe de Sucesso</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: coluna única para celular, três passos empilhados, barra de valor fixa no rodapé */
+:root{
+  color-scheme:dark;
+  --bg:#1b1819; --surface:#262223; --surface-2:#322d2e; --line:#4a4243;
+  --fg:#f6f2ee; --muted:#b9afaa; --accent:#ff9a3c; --accent-ink:#1b1819; --warn:#ffd27a; --good:#74d394; --bad:#ff8f80;
+  --display:"Montserrat","Arial Black",Arial,sans-serif;
+  --text:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--text);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 120px}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header{display:flex;align-items:center;gap:12px;padding-block:20px 4px;border-bottom:2px solid var(--accent)}
+header svg{flex:none}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.05;letter-spacing:.02em;text-transform:uppercase}
+.brand small{display:block;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.14em;margin-top:3px}
+h1{font-family:var(--display);font-weight:800;font-size:24px;line-height:1.15;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:6px 0 0}
+h2{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:10px}
+h2 .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:13px;letter-spacing:0;flex:none}
+h3{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0}
+section{display:flex;flex-direction:column;gap:12px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:var(--fg);
+  background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;min-height:56px}
+.opt:focus-visible,.btn:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt:disabled{opacity:.45;cursor:not-allowed}
+.opt .mid{flex:1;min-width:0}
+.opt .t{font-weight:600;display:block}
+.opt .s{color:var(--muted);font-size:13px;display:block}
+.opt .p{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:14px}
+.opt .p small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+.opt svg{flex:none;width:84px;height:50px}
+.stars{color:var(--accent);letter-spacing:.08em;font-size:13px}
+.note{background:var(--surface-2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 12px;font-size:14px}
+.note b{color:var(--accent);font-weight:600}
+.lock{color:var(--muted);border:1.5px dashed var(--line);border-radius:10px;padding:14px;font-size:14px}
+details{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:0 12px}
+summary{cursor:pointer;padding:12px 0;font-weight:600}
+.sgw{display:flex;gap:4px;min-width:0}
+.sg{flex:none;width:34px;font:inherit;font-weight:700;font-size:18px;line-height:1;border-radius:8px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.sg:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt.best{border-color:var(--accent)}
+.opt .tier{color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.rx{display:grid;grid-template-columns:auto 1.4fr 1.4fr 1fr;gap:8px 10px;align-items:center;padding-bottom:12px}
+.rx span{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.rx b{font-family:var(--display)}
+input{width:100%;min-width:0;font:inherit;font-size:16px;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:9px 10px;font-variant-numeric:tabular-nums}
+.hint{font-size:12px;color:var(--muted);margin:0 0 12px}
+.sum{background:var(--surface);border:1.5px solid var(--accent);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.sum .name{font-family:var(--display);font-weight:800;font-size:18px;line-height:1.25;text-wrap:balance}
+.sum ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.sum li{font-size:14px}
+.sum li span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.flag{color:var(--warn);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;border-radius:8px;padding:11px 16px;cursor:pointer;border:1.5px solid var(--line);background:transparent;color:var(--fg)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.foot{font-size:12px;color:var(--muted)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface-2);border-top:2px solid var(--accent);z-index:5;
+  padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bar .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block}
+.bar .val{font-family:var(--display);font-weight:800;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.1}
+.bar .val.wait{font-size:15px;font-weight:600;color:var(--muted)}
+.view{display:flex;flex-direction:column;gap:28px}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card label{display:flex;flex-direction:column;gap:5px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+select{width:100%;font:inherit;font-size:16px;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:9px 10px}
+select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.who{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.who .name{font-family:var(--display);font-weight:800;font-size:18px;line-height:1.2}
+.lvl{flex:none;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:4px 10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats div{background:var(--bg);border-radius:8px;padding:10px 12px}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.err{color:var(--bad);font-size:13px}
+.htbar{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.htbar i{display:block;height:100%;background:var(--accent)}
+.htitem{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px;border-top:1.5px solid var(--line);padding-top:10px;font-variant-numeric:tabular-nums}
+.htitem span{color:var(--muted);font-size:12px}
+.btn.sm{padding:6px 10px;font-size:12px}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:12px}
+.trow .mid{min-width:0}
+.trow .mid b{display:block}
+.trow .mid span,.trow small{font-size:12px;color:var(--muted)}
+.trow .tr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-variant-numeric:tabular-nums}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:4px}
+.tab{font:inherit;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:transparent;border:0;border-radius:7px;padding:11px 4px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tab:focus-visible,.qo:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.prog{display:flex;flex-direction:column;gap:6px}
+.prog .track{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.prog .fill{height:100%;background:var(--accent);width:0}
+.prog small{color:var(--muted);font-variant-numeric:tabular-nums}
+.mods{display:flex;flex-direction:column;gap:8px}
+#mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.tema{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:var(--fg);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 12px;cursor:pointer}
+.tema:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tema .tn{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--surface-2);color:var(--accent);font-family:var(--display);font-weight:800}
+.tema .mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.tema .t{font-weight:600;line-height:1.25}
+.tema .s{font-size:12px;color:var(--muted)}
+#v-treino.intema>*:not(#tview){display:none}
+.steps{display:flex;gap:4px}
+.steps i{flex:1;height:5px;border-radius:3px;background:var(--surface-2)}
+.steps i.ok{background:var(--good)}
+.steps i.cur{background:var(--accent)}
+.qt{font-family:var(--display);font-weight:800;font-size:19px;line-height:1.3;margin:0;text-wrap:balance}
+.qcard .qo{padding:14px;font-size:15px}
+.qcard .qo:disabled{opacity:.45;cursor:default}
+.qcard .qo.ok:disabled{opacity:1}
+#qfb{font-size:14px;min-height:1.3em}
+#qfb b{color:var(--good)}
+.mod summary{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mod .mt{min-width:0}
+.badge{flex:none;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1.5px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--muted);font-variant-numeric:tabular-nums}
+.badge.ok{border-color:var(--good);color:var(--good)}
+.mod .body{display:flex;flex-direction:column;gap:14px;padding-bottom:14px}
+.mod .body ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.q{border-top:1.5px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.q p{margin:0;font-weight:600}
+.qo{font:inherit;text-align:left;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;min-height:44px}
+.qo.ok{border-color:var(--good);color:var(--good)}
+.qo.no{border-color:var(--bad);color:var(--bad)}
+.q .fb{font-size:13px;color:var(--muted);min-height:1.2em}
+@media (prefers-reduced-motion:no-preference){.opt{transition:border-color .15s,background .15s}.prog .fill{transition:width .3s}}
+#sessao{align-items:center;justify-content:space-between}
+.wrap.fechado>*:not(header):not(#gate){display:none}
+.wrap.fechado~.bar{display:none}
+#gate{gap:16px}
+input[type=file]{font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="54" height="26" viewBox="0 0 54 26" fill="none" stroke="#f6f2ee" stroke-width="2.4" aria-hidden="true"><rect x="2" y="5" width="20" height="16" rx="7"/><rect x="32" y="5" width="20" height="16" rx="7"/><path d="M22 11c3-3 7-3 10 0"/></svg>
+    <div class="brand">CT - Equipe de Sucesso<small>Treinamento e atendimento</small></div>
+  </header>
+
+  <section id="gate" hidden>
+    <div><h1>Acesso da loja</h1><p class="lead">Entre com o usuário e a senha da sua loja para abrir o sistema.</p></div>
+    <form class="card" id="gtform" novalidate>
+      <label for="gt-user">Usuário da loja<input id="gt-user" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="40"></label>
+      <label for="gt-pass">Senha<input id="gt-pass" type="password" autocomplete="current-password" maxlength="60"></label>
+      <div class="err" id="gt-err"></div>
+      <div class="row"><button class="btn primary" type="submit">Entrar</button></div>
+    </form>
+  </section>
+
+  <nav class="tabs" aria-label="Áreas do CT">
+    <button class="tab" type="button" data-tab="montar" aria-pressed="true">Montar lente</button>
+    <button class="tab" type="button" data-tab="treinamento" aria-pressed="false">Treinamento</button>
+    <button class="tab" type="button" data-tab="high-ticket" aria-pressed="false">High Ticket</button>
+  </nav>
+  <div class="row" id="sessao" hidden><span class="foot" id="quem"></span><span class="row"><button class="btn sm" type="button" id="sair" hidden>Sair do meu login</button><button class="btn sm" type="button" id="sairloja">Sair da loja</button></span></div>
+
+  <section id="login" hidden>
+    <div><h1>Seu login pessoal</h1><p class="lead">O Treinamento e o High Ticket são individuais. Entre com o seu usuário e a sua senha, diferentes dos da loja.</p></div>
+    <form class="card" id="lgform" novalidate>
+      <label for="lg-user">Seu usuário<input id="lg-user" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="40"></label>
+      <label for="lg-pass">Senha<input id="lg-pass" type="password" autocomplete="current-password" maxlength="60"></label>
+      <div class="err" id="lg-err"></div>
+      <div class="row"><button class="btn primary" type="submit">Entrar</button></div>
+    </form>
+  </section>
+
+  <div class="view" id="v-montar">
+  <div class="lock" id="semcat" hidden>A tabela de preços ainda não foi carregada. Peça ao gestor para importar a tabela.</div>
+  <div>
+    <h1>Monte a lente com o cliente</h1>
+    <p class="lead">Escolha o campo visual, depois o índice e os tratamentos. Os benefícios aparecem a cada escolha e o valor do par atualiza no rodapé.</p>
+  </div>
+
+  <section>
+    <h2><span class="n">★</span>Atendimento</h2>
+    <div class="card">
+      <label for="cli-nome">Nome do cliente<input id="cli-nome" autocomplete="off" maxlength="60"></label>
+      <label for="cli-tel">Telefone do cliente<input id="cli-tel" inputmode="numeric" autocomplete="off" placeholder="(00) 00000-0000"></label>
+      <label for="otica">Nome da ótica<input id="otica" autocomplete="off" maxlength="40"></label>
+    </div>
+  </section>
+
+  <details id="rxbox" open>
+    <summary>Grau do cliente</summary>
+    <p class="hint">Digite só os números: 250 vira 2,50. A vírgula entra sozinha. Sem sinal, o grau é positivo. Toque no botão laranja para deixar negativo. Com adição, o sistema indica multifocal. Sem adição, visão simples.</p>
+    <div class="rx">
+      <span></span><span>Esférico</span><span>Cilíndrico</span><span>Adição</span>
+      <b>OD</b><div class="sgw"><button type="button" class="sg" data-for="od-esf" aria-label="Trocar o sinal do esférico OD">+</button><input id="od-esf" data-k="esf" data-sg="+" inputmode="numeric" aria-label="OD esférico" autocomplete="off"></div><div class="sgw"><button type="button" class="sg" data-for="od-cil" aria-label="Trocar o sinal do cilíndrico OD">+</button><input id="od-cil" data-k="cil" data-sg="+" inputmode="numeric" aria-label="OD cilíndrico" autocomplete="off"></div><input id="od-add" data-k="add" data-sg="+" inputmode="numeric" aria-label="OD adição" autocomplete="off">
+      <b>OE</b><div class="sgw"><button type="button" class="sg" data-for="oe-esf" aria-label="Trocar o sinal do esférico OE">+</button><input id="oe-esf" data-k="esf" data-sg="+" inputmode="numeric" aria-label="OE esférico" autocomplete="off"></div><div class="sgw"><button type="button" class="sg" data-for="oe-cil" aria-label="Trocar o sinal do cilíndrico OE">+</button><input id="oe-cil" data-k="cil" data-sg="+" inputmode="numeric" aria-label="OE cilíndrico" autocomplete="off"></div><input id="oe-add" data-k="add" data-sg="+" inputmode="numeric" aria-label="OE adição" autocomplete="off">
+    </div>
+  </details>
+  <div class="note" id="tipo" hidden></div>
+  <section id="sug" hidden></section>
+
+  <section>
+    <h2><span class="n">1</span><span id="h1t">Campo visual</span></h2>
+    <div class="opts" id="s1"></div>
+    <div id="n1"></div>
+  </section>
+  <section>
+    <h2><span class="n">2</span>Índice de refração</h2>
+    <div id="s2"></div>
+    <div id="n2"></div>
+  </section>
+  <section>
+    <h2><span class="n">3</span>Tratamentos</h2>
+    <div id="s3" style="display:flex;flex-direction:column;gap:12px"></div>
+  </section>
+  <section id="sum" hidden></section>
+
+  <p class="foot">Preços sugeridos da ótica para o consumidor, por par, conforme o Catálogo ALFA. Em altos graus, confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.</p>
+  </div>
+
+  <div class="view" id="v-treino" hidden>
+    <div class="view" id="tview" hidden></div>
+    <div>
+      <h1>Treinamento da equipe</h1>
+      <p class="lead">Escolha um tema e responda uma pergunta por vez.</p>
+    </div>
+    <div class="prog"><div class="track"><div class="fill" id="pfill"></div></div><small id="ptxt"></small></div>
+    <div class="mods" id="mods"></div>
+    <section id="ficha"></section>
+    <section>
+      <h2><span class="n">▶</span>Desafio em vídeo</h2>
+      <p class="lead" style="margin:0">Escolha um dos quatro temas, estude os dez assuntos e grave um vídeo de até 70 segundos para cada um. Envie cada vídeo ao gestor antes de começar o próximo assunto.</p>
+      <div class="mods" id="temas"></div>
+    </section>
+    <section id="equipe" hidden>
+      <h2><span class="n">★</span>Painel da equipe</h2>
+      <p class="lead" style="margin:0">Visível só para o gestor. Mostra cada vendedora e o nível dela no treinamento.</p>
+      <div class="mods" id="teamlist"><div class="lock">Carregando a equipe…</div></div>
+    </section>
+    <section id="admin" hidden>
+      <h2><span class="n">+</span>Vendedoras e acessos</h2>
+      <form class="card" id="adform" novalidate>
+        <label for="ad-tipo">Tipo de acesso<select id="ad-tipo"><option value="vendedora">Vendedora (treinamento e high ticket)</option><option value="loja">Loja (abre o sistema e a tabela de preços)</option></select></label>
+        <label for="ad-nome">Nome completo (ou nome da loja)<input id="ad-nome" autocomplete="off" maxlength="80"></label>
+        <label for="ad-user">Usuário (sem espaços, ex.: ana.paula)<input id="ad-user" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"></label>
+        <label for="ad-pass">Senha (mínimo 6 caracteres)<input id="ad-pass" autocomplete="off" maxlength="60"></label>
+        <label for="ad-loja">Loja<select id="ad-loja"></select></label>
+        <div class="foot" id="ad-err"></div>
+        <div class="row"><button class="btn primary" type="submit">Criar acesso</button></div>
+      </form>
+      <div class="mods" id="adlist"></div>
+      <p class="foot">Se alguém esquecer a senha, bloqueie o acesso antigo e crie um novo usuário para a pessoa.</p>
+      <div class="card">
+        <h3>Tabela de preços</h3>
+        <div class="foot" id="cat-status">Nenhuma tabela carregada ainda.</div>
+        <label for="cat-file">Arquivo da tabela (catalogo.json)<input id="cat-file" type="file" accept=".json,application/json"></label>
+        <div class="row"><button class="btn" type="button" id="cat-btn">Importar tabela</button></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="view" id="v-ht" hidden>
+    <div>
+      <h1>High Ticket</h1>
+      <p class="lead">Vendas a partir de R$ 2.000,00. Registre sua ordem de serviço e acompanhe a evolução da equipe da loja.</p>
+    </div>
+    <div class="card">
+      <label for="ht-loja">Loja<select id="ht-loja"></select></label>
+      <label for="ht-mes">Mês<input id="ht-mes" type="month"></label>
+    </div>
+    <section id="ht-meta"></section>
+    <form class="card" id="ht-metaform" novalidate hidden>
+      <label for="ht-metaval">Meta do mês para esta loja (quantidade de high tickets)<input id="ht-metaval" inputmode="numeric" autocomplete="off" maxlength="4"></label>
+      <div class="row"><button class="btn" type="submit">Salvar meta</button></div>
+    </form>
+    <section id="ht-reg">
+      <h2><span class="n">+</span>Registrar high ticket</h2>
+      <form class="card" id="ht-form" novalidate>
+        <label for="ht-os">Número da OS<input id="ht-os" inputmode="numeric" autocomplete="off" maxlength="20"></label>
+        <label for="ht-valor">Valor da venda (R$)<input id="ht-valor" inputmode="numeric" autocomplete="off"></label>
+        <label for="ht-data">Data da venda<input id="ht-data" type="date"></label>
+        <div class="err" id="ht-err"></div>
+        <div class="row"><button class="btn primary" type="submit">Registrar</button></div>
+      </form>
+    </section>
+    <section>
+      <h2><span class="n">★</span>Equipe da loja</h2>
+      <div class="mods" id="ht-rank"><div class="lock">Carregando os high tickets…</div></div>
+    </section>
+    <p class="foot">Aqui entram só o número da OS, o valor e a data. Nenhum dado do cliente é registrado.</p>
+  </div>
+</div>
+
+<div class="bar" id="bar"><div class="in">
+  <div><span class="lbl" id="blbl"></span><div class="val" id="bval"></div></div>
+  <button class="btn primary cpo" id="copy" type="button" hidden>Copiar orçamento</button>
+</div></div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* CONFIGURACAO DO FIREBASE: cole aqui os dados do seu projeto. */
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyDTQf8N9aouAwVUu1Gf81cxv1RII84PZU4",
+  authDomain:"ct-equipe-de-sucesso.firebaseapp.com",
+  projectId:"ct-equipe-de-sucesso",
+  storageBucket:"ct-equipe-de-sucesso.firebasestorage.app",
+  messagingSenderId:"322062294496",
+  appId:"1:322062294496:web:b48ac71aa1742e70291f85"
+};
+</script>
+<script>
+const FK=['hc','ar','sh','sky','std'];
+const FIN={
+ hc:{n:'Verniz HC (incolor)',d:'Camada de proteção antirrisco na superfície. Não tem antirreflexo.'},
+ ar:{n:'AR Premium',d:'Antirreflexo: menos reflexos e mais nitidez no trânsito e nas telas, com lente mais fácil de limpar.'},
+ sh:{n:'Super Hidrofóbico',d:'Antirreflexo no nível máximo. Repele água, poeira e gordura: as gotas deslizam e a limpeza fica muito mais fácil.'},
+ std:{n:'Tratamento de fábrica',d:'Lente acabada: já vem pronta, com o tratamento escolhido aplicado.'},
+ sky:{n:'Sky Protect Blue',d:'Tudo do Super Hidrofóbico, com proteção contra a luz azul-violeta já integrada ao tratamento.'}
+};
+const VAR={
+ inc:{n:'Incolor',d:'Lente transparente, sem filtro adicional.'},
+ fa:{n:'Filtro Azul',d:'Bloqueia até 40% da luz azul-violeta de telas e iluminação LED. Mais conforto visual durante o dia.'},
+ foto:{n:'Fotossensível',d:'Escurece ao ar livre e volta ao claro em ambientes internos. Cor cinza.'},
+ tr:{n:'Transitions',d:'Fotossensível da marca Transitions: clara dentro de casa, escura sob o sol.'},
+ pol:{n:'Polarizada (solar)',d:'Lente solar polarizada, para uso ao ar livre e direção.'}
+};
+const MAT={
+ '1.50':{n:'Resina 1.50',d:'Excelente transparência óptica e melhor custo-benefício para graus baixos a moderados.'},
+ '1.56':{n:'Índice 1.56',d:'Excelente transparência óptica para graus baixos a moderados.'},
+ '1.58':{n:'Resina 1.58 Hi-Saver',d:'Opção da tabela de surfaçadas, entre a 1.50 e a 1.59.'},
+ '1.59':{n:'Policarbonato 1.59',d:'Alta resistência a impactos e leveza superior. Ideal para armações parafusadas ou com fio de nylon.'},
+ '1.60':{n:'Índice 1.60',d:'Equilíbrio estético e espessura reduzida para graus intermediários.'},
+ '1.67':{n:'Índice 1.67',d:'Lente mais fina e leve para graus médios e altos.'},
+ '1.74':{n:'Índice 1.74',d:'Ultrafina, para altos graus: máxima estética e leveza.'}
+};
+Object.entries({
+ '1.50':'Resina CR-39, a mais tradicional. Escolha para graus baixos: ótima nitidez pelo menor preço.',
+ '1.56':'Resina um pouco mais fina que a 1.50. Escolha para graus baixos a moderados, com melhor estética e bom preço.',
+ '1.58':'Resina intermediária das surfaçadas. Escolha quando quiser uma opção entre a 1.50 e a 1.59.',
+ '1.59':'Policarbonato: leve e muito resistente a impactos. Escolha para crianças, esportes e armações parafusadas ou com fio de nylon.',
+ '1.60':'Resina de alto índice, mais fina e leve. Escolha para graus intermediários, quando a espessura começa a aparecer.',
+ '1.67':'Alto índice, bem mais fino que as resinas comuns. Escolha para graus médios e altos, com lente fina e leve.',
+ '1.74':'O índice mais fino da tabela. Escolha para graus altos, quando estética e leveza são prioridade.'
+}).forEach(([k,w])=>{MAT[k].w=w});
+const CHK='Valor a confirmar com o gestor antes de fechar.';
+// linha: [material, variação, [hc,ar,sh,sky], esf mín, esf máx, cil máx, aviso]
+let L={};
+const S={line:null,mat:null,vr:null,fin:null};
+function setCat(o){L=(o&&typeof o==='object')?o:{};['vsa','vss'].forEach(k=>{if(L[k]&&Array.isArray(L[k].r))L[k].r.forEach(r=>{r.ns=1})});S.line=S.mat=S.vr=S.fin=null;render()}
+const V=(v,ln)=>{ln=ln||S.line;return (L[ln].vn&&L[ln].vn[v])||VAR[v]};
+const F=(f,ln)=>{ln=ln||S.line;return (L[ln].fn&&L[ln].fn[f])||FIN[f]};
+function forca(){return Math.max(0,...eyes().map(e=>Math.max(Math.abs(e.s),Math.abs(e.s+e.c))))}
+function prefs(){const p=forca();return p<=2?['1.56','1.50','1.59','1.60','1.67','1.74']:p<=4?['1.60','1.59','1.67','1.74','1.56','1.50']:p<=6?['1.67','1.74','1.60','1.59']:['1.74','1.67','1.60']}
+function pick(lines,vrs,fins){for(const ln of lines)for(const m of prefs())for(const v of vrs)for(const f of fins){const i=FK.indexOf(f);
+  const r=L[ln].r.filter(r=>r[0]===m&&r[1]===v&&r[2][i]!=null&&covers(r)).sort((a,b)=>a[2][i]-b[2][i])[0];if(r)return {line:ln,mat:m,vr:v,fin:f,p:r[2][i]}}return null}
+const RXI=['od-esf','od-cil','od-add','oe-esf','oe-cil','oe-add'];
+function cli(){return {nome:$('cli-nome').value.trim(),tel:$('cli-tel').value.trim(),otica:$('otica').value.trim()}}
+function vend(){return (typeof ME!=='undefined'&&ME)?ME.nome:''}
+function rxTxt(){if(!RXI.some(i=>$(i).value))return null;const g=i=>$(i).value||'0,00';
+  return [['OD','od'],['OE','oe']].map(x=>[x[0],g(x[1]+'-esf'),g(x[1]+'-cil'),$(x[1]+'-add').value||''])}
+function benef(){const l=L[S.line];return [[l.vs?'Tipo de lente':'Campo visual',l.b],['Índice',MAT[S.mat].d],['Proteção',V(S.vr).d],['Acabamento',F(S.fin).d]]}
+function omsg(t){const el=$('orcmsg');if(el)el.textContent=t}
+function need(){if(cli().nome.length<3){omsg('Preencha o nome do cliente no início da tela para gerar o orçamento.');$('cli-nome').scrollIntoView({behavior:'smooth',block:'center'});return false}return true}
+function orcTexto(r){const c=cli(),rx=rxTxt(),v=vend();
+  return ['Orçamento de lentes',c.otica,'','Cliente: '+c.nome+(c.tel?' · '+c.tel:''),'Data: '+new Date().toLocaleDateString('pt-BR')]
+    .concat(rx?['','Receita:'].concat(rx.map(x=>x[0]+': esf '+x[1]+' | cil '+x[2]+(x[3]?' | ad '+x[3]:''))):[])
+    .concat(['','Lente: '+label(),'','O que você leva:']).concat(benef().map(b=>'• '+b[1]))
+    .concat(['','Valor do par: '+brl(r[2][FK.indexOf(S.fin)])]).concat(v?['Atendimento: '+v]:[])
+    .filter((x,i,a)=>!(x===''&&a[i-1]==='')).join('\n')}
+function gerarPDF(r){const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),W=210,M=18,c=cli(),v=vend();
+  const lab=(t,x,y)=>{d.setFont('helvetica','bold');d.setFontSize(8);d.setTextColor(150,140,135);d.text(t,x,y,{charSpace:.6})};
+  d.setFillColor(27,24,25);d.rect(0,0,W,44,'F');d.setFillColor(255,154,60);d.rect(0,44,W,1.6,'F');
+  d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(255,154,60);d.text('ORÇAMENTO DE LENTES',M,16,{charSpace:.8});
+  d.setFontSize(20);d.setTextColor(255,255,255);d.text((c.otica||'Ótica').toUpperCase(),M,28);
+  d.setFont('helvetica','normal');d.setFontSize(10);d.setTextColor(200,194,190);d.text(new Date().toLocaleDateString('pt-BR'),M,37);
+  let y=60;
+  lab('CLIENTE',M,y);if(v)lab('ATENDIMENTO',120,y);
+  d.setFont('helvetica','bold');d.setFontSize(14);d.setTextColor(27,24,25);d.text(c.nome,M,y+7,{maxWidth:95});
+  if(v){d.setFontSize(12);d.text(v,120,y+7,{maxWidth:72})}
+  if(c.tel){d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(80,74,72);d.text(c.tel,M,y+14)}
+  y+=28;
+  const rx=rxTxt();
+  if(rx){lab('RECEITA',M,y);y+=6;d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(120,112,108);
+    ['Esférico','Cilíndrico','Adição'].forEach((h,i)=>d.text(h,M+22+i*30,y));y+=6;d.setFontSize(11);d.setTextColor(27,24,25);
+    rx.forEach(x=>{d.setFont('helvetica','bold');d.text(x[0],M,y);d.setFont('helvetica','normal');[x[1],x[2],x[3]].forEach((t,i)=>d.text(t||'',M+22+i*30,y));y+=6});y+=8}
+  d.setDrawColor(225,220,216);d.line(M,y-4,W-M,y-4);y+=5;
+  lab('SUA LENTE',M,y);d.setFont('helvetica','bold');d.setFontSize(17);d.setTextColor(27,24,25);d.text(L[S.line].n,M,y+8);
+  d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(80,74,72);d.text([MAT[S.mat].n,V(S.vr).n,F(S.fin).n].join('  ·  '),M,y+15);
+  y+=29;
+  lab('O QUE VOCÊ LEVA',M,y);y+=7;
+  benef().forEach(b=>{d.setFillColor(255,154,60);d.rect(M,y-2.7,2.2,2.2,'F');d.setFont('helvetica','normal');d.setFontSize(10.5);d.setTextColor(50,46,45);
+    const ls=d.splitTextToSize(b[1],W-2*M-7);d.text(ls,M+6,y);y+=ls.length*5+3});
+  y+=6;
+  d.setFillColor(255,154,60);d.roundedRect(M,y,W-2*M,26,3,3,'F');
+  d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(27,24,25);d.text('VALOR DO PAR',M+8,y+15,{charSpace:.6});
+  d.setFontSize(24);d.text(brl(r[2][FK.indexOf(S.fin)]).replace(/ /g,' '),W-M-8,y+17,{align:'right'});
+  d.setDrawColor(225,220,216);d.line(M,279,W-M,279);d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(130,122,118);
+  d.text('Preço sugerido por par de lentes. Valores sujeitos a alteração sem aviso prévio.',M,285);
+  return d.output('blob')}
+function baixar(btn){const r=current();if(!r||!need())return;
+  if(!window.jspdf){omsg('Não foi possível gerar o PDF agora. Use Copiar orçamento.');return}
+  try{const nome=cli().nome.normalize('NFD').replace(/[^\w ]/g,'').trim().replace(/ +/g,'-').toLowerCase();
+    const u=URL.createObjectURL(gerarPDF(r)),a=document.createElement('a');a.href=u;a.download='orcamento-'+(nome||'cliente')+'.pdf';
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);omsg('PDF baixado.')}
+  catch(_){omsg('Não foi possível gerar o PDF. Use Copiar orçamento.')}}
+let SUG=[];
+function sugRender(tp){const el=$('sug');if(!tp){el.hidden=true;SUG=[];return}
+  let c;
+  if(tp==='mf')c=[['Lente ideal',pick(['xpro','x'],['inc'],['sky','ar'])],['Intermediária',pick(['premium','max'],['fa','inc'],['ar'])],['Econômica',pick(['basic','max'],['inc'],['ar','hc'])]];
+  else{const i=FK.indexOf('std'),e=L.vsa.r.filter(r=>r[1]==='inc'&&r[2][i]!=null&&covers(r)).sort((a,b)=>a[2][i]-b[2][i])[0];
+    c=[['Lente ideal',pick(['vss'],['fa','inc'],['ar'])],['Intermediária',pick(['vsa'],['fa'],['std'])],['Econômica',e?{line:'vsa',mat:e[0],vr:'inc',fin:'std',p:e[2][i]}:null]]}
+  const seen={};SUG=c.filter(x=>{if(!x[1])return false;const k=JSON.stringify(x[1]);if(seen[k])return false;seen[k]=1;return true});
+  el.hidden=false;
+  el.innerHTML='<h2><span class="n">★</span>Sugestão pelo grau</h2>'+(SUG.length?'<div class="opts">'+SUG.map((x,k)=>{const o=x[1];
+    return `<button type="button" class="opt sugo${k===0?' best':''}" data-s="${k}"><span class="mid"><span class="s tier">${x[0]}</span><span class="t">${esc(L[o.line].n)}</span><span class="s">${MAT[o.mat].n} · ${V(o.vr,o.line).n} · ${F(o.fin,o.line).n}</span></span><span class="p">${brl(o.p)}</span></button>`}).join('')
+    +'</div><p class="foot" style="margin:0">Sugestão automática: o índice segue a força do grau. Toque em uma opção para carregar a lente e ajuste conforme o uso e o orçamento do cliente.</p>'
+    :'<div class="lock">Nenhuma lente da tabela cobre esse grau. Consulte o laboratório.</div>');
+}
+function sgBtn(el){const b=document.querySelector('.sg[data-for="'+el.id+'"]');if(b)b.textContent=el.dataset.sg==='-'?'−':'+'}
+function mask(el){const v=el.value,d=v.replace(/\D/g,'').slice(0,4);let sg=el.dataset.sg;
+  if(el.dataset.k!=='add'){const p=v.includes('+'),m=v.includes('-');if(p&&m)sg=sg==='-'?'+':'-';else if(p)sg='+';else if(m)sg='-';el.dataset.sg=sg;sgBtn(el)}
+  el.value=d?sg+(d.length<2?d:d.length<4?d[0]+','+d.slice(1):d.slice(0,2)+','+d.slice(2)):''}
+function adic(){return Math.max(num('od-add')||0,num('oe-add')||0)}
+function tipo(){return adic()>0?'mf':(eyes().length?'vs':null)}
+function fmt(v){return (v>0?'+':'')+v.toFixed(2).replace('.',',')}
+function tipoMsg(tp){const el=$('tipo');el.hidden=!tp;if(!tp)return;const a=adic();
+  el.innerHTML=tp==='mf'?`<b>Multifocal.</b> Receita com adição de ${fmt(a)}. Escolha o campo visual abaixo.${a<0.75||a>3.5?' <span class="flag">Adição fora da faixa de +0,75 a +3,50: consulte o laboratório.</span>':''}`
+    :'<b>Visão simples.</b> Receita sem adição. Escolha entre lente acabada ou surfaçada abaixo.'}
+function gtxt(rs){return rs[0][3]==null?'Fabricada sob medida':'Grade esférica '+range(rs.filter(r=>r[3]!=null))}
+const $=id=>document.getElementById(id);
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function num(id){const v=parseFloat($(id).value.replace(',','.').replace('+','').trim());return isNaN(v)?null:v}
+function eyes(){return [['od-esf','od-cil'],['oe-esf','oe-cil']].map(([a,b])=>({s:num(a),c:num(b)||0})).filter(e=>e.s!==null)}
+function covers(r){
+  if(r[3]==null)return true;
+  return eyes().every(e=>{let s=e.s,c=e.c; if(c>0){s+=c;c=-c}
+    if(s<r[3]||s>r[4]) return false; if(-c>r[5]) return false;
+    if(!r.ns&&s<0&&c<0&&(-s-c)>Math.max(Math.abs(r[3]),Math.abs(r[4]))) return false; return true});
+}
+function rows(line,mat,vr){return L[line].r.filter(r=>(!mat||r[0]===mat)&&(!vr||r[1]===vr))}
+function minP(rs,fin){const i=fin?FK.indexOf(fin):-1;const v=[];rs.forEach(r=>r[2].forEach((p,j)=>{if(p!=null&&(i<0||i===j))v.push(p)}));return v.length?Math.min(...v):null}
+function uniq(a){return [...new Set(a)]}
+function fix(){
+  const tp=tipo(); if(tp&&S.line&&(!!L[S.line].vs)!==(tp==='vs'))S.line=null;
+  if(!S.line){S.mat=S.vr=S.fin=null;return}
+  const mats=uniq(rows(S.line).map(r=>r[0])); if(!mats.includes(S.mat))S.mat=null;
+  if(!S.mat){S.vr=null}else{const vs=uniq(rows(S.line,S.mat).map(r=>r[1])); if(vs.length===1)S.vr=vs[0]; else if(!vs.includes(S.vr))S.vr=null}
+  if(S.fin){const rs=rows(S.line,S.mat,S.vr); if(minP(rs,S.fin)==null)S.fin=null}
+  const fl=FK.filter(f=>L[S.line].r.some(r=>r[2][FK.indexOf(f)]!=null)); if(fl.length===1&&S.mat)S.fin=fl[0];
+}
+let cid=0;
+function lens(t){const id='c'+(++cid),a=6+t*40,p=`M0 14 C ${a} 26, ${a} 46, ${a*.5} 62 L0 62Z`;
+  return `<svg viewBox="0 0 120 62" aria-hidden="true"><defs><clipPath id="${id}"><rect x="1" y="1" width="118" height="60" rx="27"/></clipPath></defs>
+  <rect x="1" y="1" width="118" height="60" rx="27" fill="#3b3536"/>
+  <g clip-path="url(#${id})"><rect x="0" y="0" width="120" height="62" fill="#ff9a3c" fill-opacity=".85"/>
+  <path d="${p}" fill="#3b3536"/><path d="${p}" fill="#3b3536" transform="translate(120 0) scale(-1 1)"/></g>
+  <rect x="1" y="1" width="118" height="60" rx="27" fill="none" stroke="#f6f2ee" stroke-width="1.5"/></svg>`}
+function stars(l){if(l.work)return 'Ocupacional';if(l.vs)return 'Visão única';return '★'.repeat(l.st)+'☆'.repeat(5-l.st)+(l.plus?'+':'')}
+function opt(g,k,t,s,price,from,on,off,pre){
+  return `<button type="button" class="opt" data-g="${g}" data-k="${k}" aria-pressed="${on}" ${off?'disabled':''}>${pre||''}
+  <span class="mid"><span class="t">${t}</span><span class="s">${s}</span></span>
+  <span class="p">${off?'<small>'+off+'</small>':(price!=null?(from?'<small>a partir de</small>':'')+brl(price):'')}</span></button>`}
+function render(){
+  fix(); const hasRx=eyes().length>0;
+  const tp=tipo();$('h1t').textContent=tp==='vs'?'Tipo de lente':'Campo visual';tipoMsg(tp);sugRender(tp);
+  $('s1').innerHTML=Object.entries(L).filter(([k,l])=>!tp||(!!l.vs)===(tp==='vs')).map(([k,l])=>{const ok=!hasRx||l.r.some(covers);
+    return opt('line',k,esc(l.n),`<span class="stars">${stars(l)}</span> · ${esc(l.tech)}`,minP(l.r),true,S.line===k,ok?'':'fora da grade',lens(l.t))}).join('');
+  $('n1').innerHTML=S.line?`<div class="note"><b>${esc(L[S.line].n)}:</b> ${esc(L[S.line].b)}</div>`:'';
+  if(!S.line){$('s2').innerHTML='<div class="lock">Escolha o campo visual para ver os índices disponíveis.</div>';$('n2').innerHTML='';
+    $('s3').innerHTML='<div class="lock">Os tratamentos aparecem depois do índice.</div>'}
+  else{
+    const mats=uniq(rows(S.line).map(r=>r[0]));
+    $('s2').innerHTML='<div class="opts">'+mats.map(m=>{const rs=rows(S.line,m),ok=!hasRx||rs.some(covers);
+      return opt('mat',m,MAT[m].n,MAT[m].w+'<span class="s" style="opacity:.75;margin-top:3px">'+gtxt(rs)+'</span>',minP(rs),true,S.mat===m,ok?'':'fora da grade')}).join('')+'</div>';
+    $('n2').innerHTML=S.mat?`<div class="note"><b>${MAT[S.mat].n}:</b> ${MAT[S.mat].d}</div>`:'';
+    if(!S.mat){$('s3').innerHTML='<div class="lock">Escolha o índice para ver os tratamentos.</div>'}
+    else{
+      const vs=uniq(rows(S.line,S.mat).map(r=>r[1]));
+      let h='<h3>Proteção e cor</h3><div class="opts">'+vs.map(v=>{const rs=rows(S.line,S.mat,v),ok=!hasRx||rs.some(covers),p=minP(rs,S.fin);
+        return opt('vr',v,V(v).n,V(v).d,p,!S.fin,S.vr===v,!ok?'fora da grade':(p==null?'indisponível':''))}).join('')+'</div>';
+      const rs=rows(S.line,S.mat,S.vr);
+      h+='<h3>Acabamento</h3><div class="opts">'+FK.filter(f=>L[S.line].r.some(r=>r[2][FK.indexOf(f)]!=null)).map(f=>{const p=minP(rs,f);
+        return opt('fin',f,F(f).n,F(f).d,p,!S.vr,S.fin===f,p==null?'indisponível':'')}).join('')+'</div>';
+      $('s3').innerHTML=h;
+    }
+  }
+  summary();
+}
+function range(rs){const a=Math.min(...rs.map(r=>r[3])),b=Math.max(...rs.map(r=>r[4]));const f=v=>(v>0?'+':'')+v.toFixed(2).replace('.',',');return f(a)+' a '+f(b)}
+function current(){if(!(S.line&&S.mat&&S.vr&&S.fin))return null;const i=FK.indexOf(S.fin),rs=rows(S.line,S.mat,S.vr).filter(r=>r[2][i]!=null),ok=rs.filter(covers);
+  return (ok.length?ok:rs).sort((a,b)=>a[2][i]-b[2][i])[0]||null}
+function label(){return [L[S.line].n,S.mat&&MAT[S.mat].n,S.vr&&V(S.vr).n,S.fin&&F(S.fin).n].filter(Boolean).join(' · ')}
+function summary(){
+  const el=$('sum'),r=current();
+  if(!S.line){el.hidden=true;$('blbl').textContent='Valor do par';$('bval').textContent='Escolha o campo visual';$('bval').className='val wait';$('copy').hidden=true;return}
+  const p=r?r[2][FK.indexOf(S.fin)]:minP(rows(S.line,S.mat,S.vr),S.fin);
+  $('blbl').textContent=r?'Valor do par':'A partir de';$('bval').textContent=p!=null?brl(p):'Indisponível';$('bval').className='val';$('copy').hidden=!r;
+  const l=L[S.line];
+  let li=`<li><span>${l.vs?'Tipo de lente':'Campo visual'}</span>${esc(l.b)}</li>`;
+  if(S.mat)li+=`<li><span>Índice</span>${MAT[S.mat].d}</li>`;
+  if(S.vr)li+=`<li><span>Proteção</span>${V(S.vr).d}</li>`;
+  if(S.fin)li+=`<li><span>Acabamento</span>${F(S.fin).d}</li>`;
+  let extra='';
+  if(!r){const f=[!S.mat&&'o índice',!S.vr&&'a proteção e cor',!S.fin&&'o acabamento'].filter(Boolean);extra+='<div class="flag">Para gerar o orçamento, falta escolher: '+f.join(', ')+'.</div>'}
+  if(r){const e=eyes().length&&!covers(r); if(e)extra+='<div class="flag">Atenção: o grau informado está fora da grade desta lente. Consulte o laboratório.</div>';
+    else if(r[3]!=null)extra+=`<div class="foot">Grade: esférico ${range([r])}, ${r[5]?'cilíndrico até -'+r[5].toFixed(2).replace('.',','):'somente esférica'}.</div>`;
+    if(r[6])extra+=`<div class="flag">${r[6]}</div>`}
+  if(!l.work&&!l.vs)extra+='<div class="note"><b>Dica de 2º par:</b> o cliente passa mais de 3 horas por dia no computador? Ofereça também um par ALFA WORK.</div>';
+  el.hidden=false;
+  el.innerHTML=`<h2><span class="n">✓</span>O que o cliente leva</h2><div class="sum"><div class="name">${esc(label())}</div><ul>${li}</ul>${extra}
+    <div class="foot" id="orcmsg"></div>
+    <div class="row">${r?'<button class="btn primary cpo" type="button">Copiar orçamento</button><button class="btn" type="button" id="pdf">Baixar PDF</button>':''}<button class="btn" type="button" id="reset">Novo atendimento</button></div></div>`;
+}
+document.addEventListener('click',e=>{
+  const sb=e.target.closest('.sg'); if(sb){const el=$(sb.dataset.for);el.value=el.value.replace(/[+-]/g,'');el.dataset.sg=el.dataset.sg==='-'?'+':'-';mask(el);sgBtn(el);render();return}
+  const so=e.target.closest('.sugo'); if(so){const o=SUG[+so.dataset.s][1];S.line=o.line;S.mat=o.mat;S.vr=o.vr;S.fin=o.fin;render();$('sum').scrollIntoView({behavior:'smooth',block:'start'});return}
+  const b=e.target.closest('.opt'); if(b&&!b.disabled){const g=b.dataset.g,k=b.dataset.k;S[g]=S[g]===k?null:k;render();return}
+  if(e.target.id==='reset'){S.line=S.mat=S.vr=S.fin=null;RXI.concat(['cli-nome','cli-tel']).forEach(i=>{$(i).value=''});render();window.scrollTo({top:0});return}
+  if(e.target.id==='pdf'){baixar(e.target);return}
+  const cb=e.target.closest('.cpo'); if(cb){const r=current();if(!r||!need())return;
+    const done=m=>{cb.textContent=m;setTimeout(()=>{cb.textContent='Copiar orçamento'},1800)};
+    try{navigator.clipboard.writeText(orcTexto(r)).then(()=>done('Copiado'),()=>done('Não foi possível copiar'))}catch(_){done('Não foi possível copiar')}}
+});
+$('cli-tel').addEventListener('input',e=>{const d=e.target.value.replace(/\D/g,'').slice(0,11);
+  e.target.value=d.length<3?d:d.length<7?'('+d.slice(0,2)+') '+d.slice(2):'('+d.slice(0,2)+') '+d.slice(2,d.length-4)+'-'+d.slice(-4)});
+try{$('otica').value=localStorage.getItem('ct-otica')||''}catch(_){}
+$('otica').addEventListener('input',e=>{try{localStorage.setItem('ct-otica',e.target.value)}catch(_){}});
+RXI.forEach(i=>{const el=$(i);el.addEventListener('input',()=>{mask(el);render()});
+  el.addEventListener('blur',()=>{const n=num(i);if(n!==null)el.value=el.dataset.sg+Math.abs(n).toFixed(2).replace('.',',')})});
+render();
+</script>
+<script>
+const M=[
+{t:'A jornada do cliente e a vitrine',c:[
+ ['As etapas da experiência',['Atração: a vitrine traz o cliente para dentro.','Lounge de descompressão: o cliente se sente em um ambiente familiar.','Atendimento, vitrine interna e, por fim, a entrega.']],
+ ['7 técnicas para a vitrine',['Minimalismo: poucos produtos. O cliente vê o que você quer destacar e você descobre qual produto o atraiu.','Iluminação: luz direcionada no óculos em destaque. Ilumine o que você deseja vender.','Elementos externos que conversem com o seu público.','Volumetrias: blocos de tamanhos diferentes, no mesmo padrão de cor ou textura.','Cores: use repetição ou agrupamento.','Simetria: organização simétrica chama o olhar.','História: conte algo e desperte curiosidade.']],
+ ['Vitrine interna',['Organização, fácil acesso e fácil visualização.','Boa iluminação e espelho sempre próximo.']]],
+ q:[['Por que montar a vitrine com poucos produtos?',['Para gastar menos com estoque','Para o cliente ver o destaque e você saber o que o atraiu','Para a vitrine parecer maior'],1],
+    ['O que a iluminação focalizada faz?',['Atrai o olhar direto para o produto que você quer vender','Economiza energia','Esconde os preços'],0],
+    ['O que precisa estar sempre perto da vitrine interna?',['O caixa','A máquina de cartão','O espelho'],2]]},
+{t:'Recepção: o primeiro contato',c:[
+ ['O corpo fala',['O primeiro contato define se o cliente fica na loja.','Faça: sorria, olhe nos olhos, fique em pé, mantenha-se próximo e movimente o cliente pela loja.','Não faça: ficar sentado, atrás do balcão ou de costas para o cliente.']],
+ ['O que dizer',['Cliente conhecido: “Bom dia, Maria do Carmo! Tudo bem? Quanto tempo! Como posso lhe ajudar hoje?”','Cliente novo: “Bom dia, seja bem-vindo! Qual seu nome? Como posso lhe ajudar hoje?”']],
+ ['Nunca diga',['“Pois não?”','“Pode ficar à vontade aí.” ou “Qualquer coisa é só me chamar.”','“Esse óculos eu não gosto.” ou “Eu particularmente não usaria.”','“Esse é mais fraquinho.”']]],
+ q:[['Qual frase nunca deve ser dita?',['“Como posso lhe ajudar hoje?”','“Qualquer coisa é só me chamar.”','“Seja bem-vindo!”'],1],
+    ['Onde o vendedor deve estar quando o cliente entra?',['Em pé e próximo ao cliente','Sentado atrás do balcão','No caixa, aguardando ser chamado'],0],
+    ['O que perguntar a um cliente que você ainda não conhece?',['Quanto ele quer gastar','Onde ele comprou o último óculos','O nome dele'],2]]},
+{t:'A química da venda',c:[
+ ['Dopamina: motivação e recompensa',['Crie senso de urgência, mostre resultados e benefícios, conte histórias, ofereça recompensas e faça perguntas motivadoras.']],
+ ['Endorfina: prazer e bem-estar',['Dê tratamento VIP, use o humor, valorize a compra, torne a experiência agradável e celebre a venda.']],
+ ['Ocitocina: confiança e vínculo',['Linguagem positiva e amigável, empatia, sorriso, toque com moderação e algo de valor para o cliente.']],
+ ['Serotonina: bem-estar e felicidade',['Soluções personalizadas, destaque da qualidade, empatia, garantias e benefícios adicionais.']]],
+ q:[['Qual está ligada à confiança e ao vínculo com o cliente?',['Dopamina','Ocitocina','Endorfina'],1],
+    ['Criar senso de urgência e mostrar benefícios ativa qual delas?',['Dopamina','Serotonina','Ocitocina'],0],
+    ['Celebrar a venda com o cliente ativa a:',['Serotonina','Ocitocina','Endorfina'],2]]},
+{t:'Os 5 sentidos na loja',c:[
+ ['Audição',['Playlist para ambientes comerciais ou internacional tranquila.','Proibidos: forró, funk, rap, sertanejo, sertanejo raiz e rock pesado.']],
+ ['Olfato',['Loja sempre limpa, aromatizador ligado, sacolas perfumadas e perfume pessoal leve.']],
+ ['Paladar',['Todo cliente que entra, sem exceção, recebe água ou café.','“Posso fazer um café pra você? Ou prefere uma água?”','Sente-se com o cliente e converse com calma, nunca com pressa.']],
+ ['Tato',['Produtos de fácil acesso, para o cliente tocar e experimentar. Preços sempre expostos.','Temperatura agradável: nem calor, nem frio.','Cadeiras confortáveis e limpas.']],
+ ['Visão',['Loja organizada o dia todo, principalmente na área de entrega e no caixa.','Uniforme limpo e em boas condições, com imagem pessoal cuidada.']]],
+ q:[['Quem deve receber água ou café?',['Só quem fechar a compra','Todos os clientes que entrarem, sem exceção','Só clientes antigos'],1],
+    ['Qual estilo musical é permitido na loja?',['Sertanejo','Funk','Playlist internacional tranquila'],2],
+    ['Como devem ficar os preços dos produtos?',['Sempre expostos','Só informados no caixa','Escondidos até o cliente perguntar'],0]]},
+{t:'Lentes ALFA na ponta da língua',c:[
+ ['A escada de campo visual',['Basic, MaX, Premium, X e X PRO: quanto mais alto o nível, maior a abertura do corredor e menor o desfoque nas laterais.','ALFA WORK é a ocupacional: foco até 90 cm, com Filtro Azul de série.']],
+ ['Materiais',['1.50 e 1.56: graus baixos a moderados, melhor custo-benefício.','Policarbonato 1.59: resistente a impactos, ideal para armações parafusadas ou com fio de nylon.','1.60: equilíbrio para graus intermediários.','1.67 e 1.74: ultrafinas, para graus altos.']],
+ ['Tratamentos',['Verniz HC: proteção antirrisco. AR Premium: menos reflexos e mais nitidez.','Super Hidrofóbico e Sky Protect Blue: exclusivos das linhas X e X PRO.','Filtro Azul ALFA: bloqueia até 40% da luz azul-violeta.','Fotossensível e Transitions: escurecem ao ar livre e voltam ao claro dentro de casa.']],
+ ['Dicas de balcão',['2º par: cliente de multifocal que passa mais de 3 horas por dia no computador se beneficia de um par ALFA WORK.','Visão simples: acabadas seguem a grade padrão, surfaçadas são feitas sob medida. Antirreflexo com 6 meses de garantia e troca de receita em até 6 meses.','Regra da soma: com esférico e cilíndrico negativos, a soma não pode passar do limite esférico do material.']]],
+ q:[['Quais tratamentos são exclusivos das linhas X e X PRO?',['Verniz HC e AR Premium','Super Hidrofóbico e Sky Protect Blue','Fotossensível e Transitions'],1],
+    ['Até que distância a ALFA WORK é otimizada?',['90 cm','3 metros','Só para longe'],0],
+    ['Quando oferecer um 2º par ALFA WORK?',['Para todo cliente de visão simples','Só para quem dirige à noite','Para quem usa multifocal e passa mais de 3 horas por dia no computador'],2],
+    ['Armação parafusada ou com fio de nylon pede qual material?',['Resina 1.50','Policarbonato 1.59','Qualquer um'],1]]},
+{t:'Orçamento e pós-orçamento',c:[
+ ['Por que existe',['Muitos clientes não fecham na hora. Um segundo contato aumenta muito a chance de transformar o orçamento em venda.']],
+ ['Passo a passo',['Registre o nome completo do cliente logo no início, no caderno ou no tablet.','Apresente o orçamento de forma clara e detalhada. Se ele não fechar, peça o telefone para o acompanhamento.','Anote os produtos e os valores conversados.','Todos os dias, às 17:40, envie os orçamentos e telefones do dia para o responsável pelo acompanhamento.']]],
+ q:[['O cliente recebeu o orçamento e não fechou. O que fazer?',['Deixar ele ir e aguardar a volta','Pedir o telefone para o acompanhamento','Oferecer desconto até ele aceitar'],1],
+    ['Em que horário os orçamentos do dia são enviados?',['17:40','12:00','No dia seguinte de manhã'],0],
+    ['Qual é o primeiro passo ao atender quem pede orçamento?',['Mostrar a lente mais cara','Pedir a receita','Registrar o nome completo do cliente'],2]]},
+{t:'Entrega: a segunda venda',c:[
+ ['Passo a passo',['Ative os 5 sentidos de novo, repetindo o atendimento do dia da compra.','Peça para o cliente se sentar e ofereça café ou água.','Leve os óculos até ele, limpe e ensine a usar o limpa lentes e o lenço mágico.','Peça para experimentar e faça os ajustes. Pergunte como ele se sente com os novos óculos.','Ofereça o limpa lentes, o lenço mágico e o óculos de sol que acabou de chegar.','Entregue em mãos, com um sorriso, e convide a voltar.','Reforce: a manutenção é gratuita por tempo indeterminado.']],
+ ['A embalagem',['Sacola personalizada e perfumada, lacrada com fita de cetim: sensação de presente.','Estojo com o produto e a flanela bem posicionados.','Porta receitas com cartão de visita e certificados de garantia.','Pacote de balas com a etiqueta “Um mimo para você” e cartão de agradecimento.','Deixe pronta com antecedência e abra na frente do cliente.']]],
+ q:[['Por quanto tempo a manutenção dos óculos é gratuita?',['6 meses','Por tempo indeterminado','1 ano'],1],
+    ['O que oferecer no momento da entrega?',['Limpa lentes, lenço mágico e óculos de sol','Nada, a venda já foi feita','Só o recibo'],0],
+    ['Qual sensação a sacola com fita de cetim deve passar?',['De economia','De pressa','De presente'],2]]},
+{t:'Ligação telefônica',c:[
+ ['Receita vencida',['Todos os dias, ligue para os clientes que compraram há um ano.','Identifique-se como vendedora da sua ótica (Donna Bella ou Ótica Real), pergunte se é uma boa hora e diga que será breve.','Informe que já passou um ano da última consulta e ofereça o agendamento.','Retorne com a data e a hora, anote no relatório e envie um lembrete no dia.','Se o cliente não aparecer na loja, ligue no dia seguinte, pergunte como foi a consulta e ofereça um cupom de desconto.']],
+ ['Antes de ligar, veja na ficha',['Se ele voltou à loja antes de completar um ano.','O valor e o produto da última compra.','Por qual oftalmologista ele passou.']],
+ ['Convite para eventos',['Abra perguntando como tem sido a experiência com os óculos e escute.','Pergunte sobre uso, adaptação e manutenção, em tom leve e pausado.','Lembre da manutenção gratuita (plaquetas, ponteiras, ajustes) e faça o convite.','Finalize confirmando a presença.']]],
+ q:[['Quando ligar para avisar da receita vencida?',['Um mês depois da compra','Um ano depois da compra','Só quando o cliente pedir'],1],
+    ['O que conferir na ficha antes de ligar?',['Última compra, valor, retorno à loja e oftalmologista','Só o número do telefone','O endereço do cliente'],0],
+    ['O cliente fez a consulta e não apareceu na loja. O que fazer?',['Aguardar ele voltar','Riscar da lista','Ligar no dia seguinte e oferecer um cupom de desconto'],2]]},
+{t:'Atendimento online e mala em casa',c:[
+ ['Atendimento online',['Responda em no máximo 5 minutos. O concorrente pode estar na frente.','Comece chamando o cliente pelo nome, com um emoji de sorriso. Nunca use apelidos nem gírias.','Linguagem simples, sem termos técnicos. Capriche nas fotos.','Não bloqueie a confirmação de leitura e nunca deixe o cliente falando sozinho.','O atendimento só termina depois que você se despede.','Use mensagem automática depois das 18h.']],
+ ['Mala ótica em casa',['Para pessoas próximas, familiares e clientes fidelizados, com modelos escolhidos para cada pessoa.','Na mala: 10 ou 20 óculos com preço, espelho, limpa lentes, lenço mágico, etiqueta com o nome do cliente, balas, cheirinho e cartão de explicação.','Continue o atendimento pelo WhatsApp, com fotos de outros modelos se precisar.']]],
+ q:[['Em quanto tempo uma mensagem deve ser respondida?',['Em até 1 hora','Em no máximo 5 minutos','No fim do dia'],1],
+    ['Como chamar o cliente no atendimento online?',['Pelo nome','Por um apelido carinhoso','Por “querida” ou “amigo”'],0],
+    ['Quantos óculos vão na mala?',['Só 1 ou 2','Todos os da vitrine','10 ou 20, todos com preço'],2]]},
+{t:'Adam Robô: triagem visual',c:[
+ ['O que é',['Um teste de acuidade visual para conscientizar sobre o cuidado com a visão.','Não é diagnóstico, não mede grau e não emite receita. Isso é exclusivo do especialista.','Sem venda casada: o cliente escolhe o especialista dele.']],
+ ['Antes da ação',['Nunca atenda sem autorização: direção e pais nas escolas, diretoria nas empresas, proprietário nos mercados.','Peça sempre a autorização de uso de imagem.']],
+ ['Como aplicar o teste',['Preencha a ficha: nome completo, data de nascimento e escolaridade. Depois, faça a anamnese.','Deixe a seta em longe. Teste de perto só a partir de 36 anos.','Comece pelo olho direito, depois o esquerdo.','Teste de cores com todos. Desenhos só para crianças e adultos não alfabetizados.','Acertou tudo: procurar o especialista em 90 dias. Errou 1 a 2 linhas: em 30 dias. Errou 3 a 4: em 15 dias. Acima disso, confirme a orientação com o gestor.','Entregue a via do cliente e fique com a sua.']],
+ ['Depois do teste',['Pergunte se deseja agendar com o oftalmo e qual ele costuma visitar. Se não tiver, ofereça 3 parceiros.','Confirme o agendamento, envie lembrete 1 dia antes e registre na planilha.','Após a consulta, pergunte como foi, se já tem a receita e ofereça fotos de armações.']]],
+ q:[['O Adam Robô informa o grau ou emite receita?',['Sim, os dois','Não, é só uma triagem de acuidade visual','Só o grau'],1],
+    ['A partir de que idade se faz o teste de perto?',['36 anos','18 anos','50 anos'],0],
+    ['Por qual olho o teste começa?',['Tanto faz','Esquerdo','Direito'],2]]}
+];
+const TEMAS=[
+ ['Visagismo',['O que é o visagismo?','Como aplicar o visagismo à óptica?','Como formato, material e cor da armação influenciam a imagem pessoal','Óculos clássicos e óculos criativos','Diferenças técnicas de pontes','Como harmonizar as cores dos óculos com o rosto','Os óculos e as características pessoais do cliente','Os modelos de óculos e o que cada um transmite','Os óculos comunicam','Encontre 3 óculos com propostas diferentes para alguém da equipe (vídeo sem limite de tempo)']],
+ ['Armações',['Óculos aviador e sua comunicação','Óculos redondos e sua proposta','Óculos gatinho e suas particularidades','Óculos de linhas retas e sua comunicação','Óculos como extensão da comunicação','Como definir se o tamanho dos óculos está correto','Oversized, uma proposta atual','Evolução do conceito do uso de óculos','Óculos para quem tem cabelos grisalhos','Armação correta para miopia alta: mito ou verdade?']],
+ ['Lentes',['Como agregar valor à venda com lentes digitais','Lentes digitais ocupacionais','Óculos de perto ou multifocal: qual a indicação correta?','Os benefícios das lentes cosméticas','Multifocal convencional: produção em massa, não personalizada','Existe tabela de adição por idade para o présbita?','Motivos para uma boa adaptação ao multifocal','As 10 lentes de maior custo do mercado e seus benefícios','Como desacelerar a progressão da miopia','Vantagens das lentes digitais de visão simples']],
+ ['Laboratório',['Filtros medicinais','Importância da tomada de medidas na visão simples','Multifocal convencional: o fim é inevitável?','Como deve ser feita a limpeza das lentes','Como medir a DNP de uma pessoa estrábica','Cuidados ao manusear as armações dos clientes','O critério de qualidade de um óculos perfeito','O processo de produção','O padrão de excelência de atendimento ao cliente','A importância do processo dentro da empresa']]
+];
+let P={};
+function save(){if(typeof salvaProg==='function')salvaProg()}
+function hits(i){return M[i].q.filter((_,j)=>P[i]&&P[i][j]).length}
+const EXP=[
+ ['Com poucos produtos o cliente enxerga o destaque, e você descobre qual peça o trouxe para dentro.','Luz direcionada puxa o olhar. Ilumine o que você deseja vender.','O espelho perto da vitrine interna deixa o cliente experimentar na hora.'],
+ ['Essa frase afasta o cliente. O atendimento é ativo do começo ao fim.','Em pé, sorrindo e próximo: o corpo fala antes de você.','Chamar pelo nome cria proximidade desde o primeiro minuto.'],
+ ['A ocitocina vem da empatia, do sorriso e da linguagem positiva.','Urgência, benefícios e recompensas ativam a dopamina, ligada à motivação.','Celebrar a venda ativa a endorfina, ligada ao prazer e ao bem-estar.'],
+ ['Sem exceção: “Posso fazer um café pra você? Ou prefere uma água?”','Só playlist para ambientes comerciais ou internacional tranquila.','Preço exposto dá segurança e deixa o cliente à vontade para tocar e experimentar.'],
+ ['Super Hidrofóbico e Sky Protect Blue só existem nas linhas X e X PRO.','A WORK é ocupacional: computador, celular e leitura, até 90 cm.','O multifocal do dia a dia não é feito para horas de tela. O 2º par WORK resolve isso.','O policarbonato resiste a impactos e aguenta a furação da armação.'],
+ ['Com o telefone, a equipe faz o segundo contato e aumenta a chance de fechar.','Às 17:40 os orçamentos do dia seguem para o responsável pelo acompanhamento.','O nome completo abre o registro e permite o acompanhamento depois.'],
+ ['O cliente pode voltar sempre que precisar de ajustes ou reparos.','A entrega é a segunda oportunidade de venda.','A sacola lacrada com fita de cetim faz o cliente sentir que está se presenteando.'],
+ ['Depois de um ano a receita está vencida: hora de oferecer uma nova consulta.','Com esses dados em mãos a conversa fica pessoal e certeira.','O retorno com o cupom mantém a venda viva.'],
+ ['Agilidade é tudo: o concorrente pode responder antes.','Sempre pelo nome, com um emoji de sorriso. Nunca por apelido.','A mala cheia de novidades desperta a vontade de comprar.'],
+ ['O Adam é uma triagem de conscientização. Grau e receita são exclusivos do especialista.','Deixe a seta em longe e só mova para perto a partir de 36 anos.','Sempre o olho direito primeiro, depois o esquerdo.']
+];
+M.forEach((m,i)=>m.q.forEach((q,j)=>{q[3]=EXP[i][j]}));
+[
+ [['Qual técnica de vitrine trabalha com repetição ou agrupamento?',['Simetria','Cores','Volumetrias'],1,'A estratégia de cores usa repetição ou agrupamento para destacar o produto.'],
+  ['Qual etapa da jornada vem logo depois da atração?',['Lounge de descompressão','Entrega','Vitrine interna'],0,'Depois que a vitrine atrai, o lounge faz o cliente se sentir em um ambiente familiar.']],
+ [['Qual destas frases desvaloriza o produto na frente do cliente?',['“Seja bem-vindo!”','“Como posso lhe ajudar hoje?”','“Esse é mais fraquinho.”'],2,'Nunca diminua um produto nem dê opinião negativa sobre ele.'],
+  ['Como receber um cliente que você já conhece?',['Com “Pois não?”','Pelo nome, perguntando como ele está','Esperando ele falar primeiro'],1,'“Bom dia, Maria do Carmo! Tudo bem? Quanto tempo!” mostra que ele é lembrado.']],
+ [['Oferecer soluções personalizadas e garantias ativa a:',['Serotonina','Dopamina','Endorfina'],0,'A serotonina está ligada à satisfação e à confiança do cliente.'],
+  ['Dar tratamento VIP e usar o humor ativa a:',['Ocitocina','Dopamina','Endorfina'],2,'A endorfina vem da experiência agradável durante a venda.']],
+ [['Que perfume a vendedora deve usar?',['Um perfume marcante','Um perfume leve','Nenhum'],1,'O olfato faz parte da experiência: perfume pessoal sempre leve.'],
+  ['Como deve estar a temperatura da loja?',['Agradável: o cliente não sente calor nem frio','Bem fria, para ele comprar rápido','Tanto faz'],0,'O ar-condicionado é ferramenta de venda: limpo, regulado e com manutenção em dia.']],
+ [['Quanto da luz azul-violeta o Filtro Azul ALFA bloqueia?',['Até 10%','Até 40%','100%'],1,'O Filtro Azul ALFA bloqueia até 40% da luz azul-violeta de telas e LED.'],
+  ['O que muda conforme a linha sobe da Basic até a X PRO?',['A lente fica mais escura','O grau aumenta','O campo de visão fica mais aberto, com menos desfoque nas laterais'],2,'Quanto mais alto o nível, maior a abertura do corredor e o conforto.']],
+ [['Além do nome e do telefone, o que precisa ficar anotado?',['Os produtos e os valores conversados','Só o grau do cliente','A opinião da vendedora'],0,'Com produtos e valores registrados, o segundo contato retoma de onde parou.'],
+  ['Por que fazer um segundo contato depois do orçamento?',['Para cumprir tabela','Porque aumenta muito a chance de fechar a venda','Para pedir indicações'],1,'Muitos clientes não fecham na hora. O segundo contato converte.']],
+ [['O que fazer com os óculos antes de entregar ao cliente?',['Guardar direto na sacola','Entregar ainda embalado','Limpar e ensinar a usar o limpa lentes e o lenço mágico'],2,'A limpeza na frente do cliente valoriza o produto e apresenta os itens de cuidado.'],
+  ['Quando a embalagem deve ser preparada?',['Com antecedência, e aberta de novo na frente do cliente','Só depois que o cliente sair','Na hora, com pressa'],0,'A embalagem faz parte do produto e merece a mesma atenção da venda.']],
+ [['Como começar a ligação?',['Oferecendo logo uma promoção','Identificando-se, perguntando se é uma boa hora e dizendo que será breve','Pedindo o CPF'],1,'Respeitar o tempo do cliente abre espaço para a conversa.'],
+  ['No convite para eventos, o que lembrar ao cliente?',['Que os preços vão subir','Que a loja fecha cedo','Que a ótica oferece manutenção gratuita'],2,'Plaquetas, ponteiras e ajustes gratuitos são um bom motivo para ele voltar à loja.']],
+ [['Quando o atendimento online termina?',['Depois que você se despede','Quando o cliente para de responder','Quando você envia o preço'],0,'Assim como na loja, o atendimento só acaba com a despedida.'],
+  ['O que usar no WhatsApp depois das 18h?',['Nada, responde no outro dia','Mensagem automática','Áudios longos'],1,'A mensagem automática mostra que o cliente foi visto e será atendido.']],
+ [['Quem faz o teste com desenhos?',['Todos os clientes','Só idosos','Crianças e adultos não alfabetizados'],2,'O teste de cores é para todos. Os desenhos substituem as letras para quem não lê.'],
+  ['O cliente acertou todas as linhas. Qual a orientação?',['Procurar o especialista nos próximos 90 dias','Não precisa de consulta','Comprar óculos novos'],0,'Mesmo com tudo certo, o Adam sempre orienta a procurar o especialista.']]
+].forEach((qs,i)=>qs.forEach(q=>M[i].q.push(q)));
+function progress(){const d=M.filter((_,i)=>hits(i)===M[i].q.length).length;
+  document.getElementById('pfill').style.width=(d/M.length*100)+'%';
+  document.getElementById('ptxt').textContent=d+' de '+M.length+' temas concluídos'}
+let TV=null,QI=0,ANS=false,FIM=false;
+const G=id=>document.getElementById(id);
+function temasHome(){G('mods').innerHTML=M.map((m,i)=>{const h=hits(i),n=m.q.length;
+  return `<button type="button" class="tema" data-t="${i}"><span class="tn">${i+1}</span><span class="mid"><span class="t">${m.t}</span><span class="s">${n} perguntas</span><span class="htbar"><i style="width:${h/n*100}%"></i></span></span><span class="badge${h===n?' ok':''}">${h===n?'Concluído':h+'/'+n}</span></button>`}).join('')}
+function abrir(i){TV=i;const f=M[i].q.findIndex((_,j)=>!(P[i]&&P[i][j]));QI=f<0?0:f;ANS=false;FIM=false;
+  G('v-treino').classList.add('intema');G('tview').hidden=false;tema();window.scrollTo({top:0})}
+function fechar(){TV=null;G('v-treino').classList.remove('intema');G('tview').hidden=true;temasHome();progress();if(typeof ficha==='function')ficha();window.scrollTo({top:0})}
+function tema(){const m=M[TV],n=m.q.length;
+  let h=`<div class="row"><button type="button" class="btn sm" id="tback">‹ Todos os temas</button></div><div><h3>Tema ${TV+1} de ${M.length}</h3><h1>${m.t}</h1></div>`;
+  if(FIM){let nx=-1;for(let k=1;k<=M.length;k++){const c=(TV+k)%M.length;if(hits(c)<M[c].q.length){nx=c;break}}
+    h+=`<div class="card"><div class="who"><div class="name">Tema concluído</div><span class="lvl">${n}/${n}</span></div>
+      <div class="foot">Você respondeu certo as ${n} perguntas deste tema.${nx<0?' Todos os temas estão concluídos.':''}</div>
+      <div class="row">${nx>=0?`<button type="button" class="btn primary" data-t="${nx}">Próximo tema</button>`:''}<button type="button" class="btn" id="tback2">Voltar aos temas</button></div></div>`}
+  else{const q=m.q[QI];
+    h+=`<div class="steps">${m.q.map((_,j)=>`<i class="${j===QI?'cur':(P[TV]&&P[TV][j]?'ok':'')}"></i>`).join('')}</div>
+    <div class="card qcard"><h3>Pergunta ${QI+1} de ${n}</h3><p class="qt">${q[0]}</p>
+      <div class="opts">${q[1].map((o,k)=>`<button type="button" class="qo" data-o="${k}">${o}</button>`).join('')}</div>
+      <div id="qfb"></div><div class="row" id="qrow" hidden><button type="button" class="btn primary" id="qnx">${QI<n-1?'Próxima pergunta':'Concluir tema'}</button></div></div>
+    <details class="mod"><summary>Precisa de ajuda? Veja o resumo do tema</summary><div class="body">${m.c.map(c=>`<div><h3>${c[0]}</h3><ul>${c[1].map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('')}</div></details>`}
+  G('tview').innerHTML=h}
+document.getElementById('temas').innerHTML=TEMAS.map(t=>`<details class="mod"><summary><span class="mt">${t[0]}</span><span class="badge">10 assuntos</span></summary><div class="body"><ul>${t[1].map(x=>`<li>${x}</li>`).join('')}</ul></div></details>`).join('');
+temasHome();progress();
+document.addEventListener('click',e=>{
+  const tb=e.target.closest('[data-t]'); if(tb){abrir(+tb.dataset.t);return}
+  if(e.target.id==='tback'||e.target.id==='tback2'){fechar();return}
+  if(e.target.id==='qnx'){if(QI<M[TV].q.length-1){QI++;ANS=false}else{FIM=true}tema();window.scrollTo({top:0});return}
+  const b=e.target.closest('#tview .qo');
+  if(b){if(ANS)return;const q=M[TV].q[QI],ok=+b.dataset.o===q[2];
+    if(ok){ANS=true;b.classList.add('ok');G('tview').querySelectorAll('.qo').forEach(x=>{x.disabled=true});
+      P[TV]=P[TV]||{};P[TV][QI]=1;save();G('qfb').innerHTML='<b>Resposta certa.</b> '+q[3];G('qrow').hidden=false}
+    else{b.classList.add('no');b.disabled=true;G('qfb').textContent='Ainda não. Tente outra opção ou abra o resumo do tema.'}
+    return}
+  const t=e.target.closest('.tab'); if(t){location.hash=t.dataset.tab;show(t.dataset.tab)}
+});
+let ME=null,LOJA=null,CURV='montar';
+function show(v){if(v!=='treinamento'&&v!=='high-ticket')v='montar';CURV=v;const lock=v!=='montar'&&!ME,g=id=>document.getElementById(id);
+  g('v-montar').hidden=v!=='montar';g('v-treino').hidden=lock||v!=='treinamento';g('v-ht').hidden=lock||v!=='high-ticket';
+  g('login').hidden=!lock;g('bar').hidden=v!=='montar';g('sessao').hidden=!LOJA;
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tab===v)))}
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+show(location.hash.slice(1));
+</script>
+<script>
+const LOJAS=['Donna Bella Centro','Donna Bella Ouro Fino','Donna Bella São Cristóvão','Ótica Real 1','Ótica Real 2','Outra'];
+const TOTQ=M.reduce((a,m)=>a+m.q.length,0);
+const DOM='@ct.example.com',ADMIN='admin'+DOM;
+const cfgOk=!!(window.firebase&&typeof FIREBASE_CONFIG!=='undefined'&&FIREBASE_CONFIG.apiKey&&FIREBASE_CONFIG.apiKey.indexOf('COLE')<0);
+let AUTH=null,FS=null,LAUTH=null,LFS=null,lunsub=null,unsubs=[],pt=null;
+const slug=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9._-]/g,'').slice(0,40);
+['ad-loja'].forEach(i=>{$(i).innerHTML=LOJAS.map(l=>`<option>${l}</option>`).join('')});
+function feitos(){return M.filter((_,i)=>hits(i)===M[i].q.length).length}
+function acertos(){return M.reduce((a,_,i)=>a+hits(i),0)}
+function nivel(d){return d>=M.length?'Equipe de Sucesso':d>=6?'Avançada':d>=3?'Em desenvolvimento':'Iniciante'}
+function oticaPadrao(){const lj=(ME&&ME.loja)||(LOJA&&LOJA.loja)||'';if(lj&&lj!=='Outra'&&!$('otica').value)$('otica').value=(lj.indexOf('Donna')===0?'Óticas ':'')+lj}
+function limpaP(p){const o={};if(p&&typeof p==='object')Object.keys(p).forEach(a=>{if(M[a]&&p[a]&&typeof p[a]==='object'){o[a]={};Object.keys(p[a]).forEach(b=>{if(M[a].q[b])o[a][b]=1})}});return o}
+function salvaProg(){if(!ME||!FS)return;clearTimeout(pt);pt=setTimeout(()=>{if(!ME)return;const d=feitos();
+  FS.doc('progresso/'+ME.uid).set({nome:ME.nome,loja:ME.loja,temas:d,acertos:acertos(),nivel:nivel(d),p:P,atualizado:new Date().toISOString()}).catch(()=>{})},700)}
+function ficha(){const el=$('ficha');if(!ME){el.innerHTML='';return}const d=feitos();
+  el.innerHTML=`<h2><span class="n">★</span>Minha ficha</h2><div class="card">
+    <div class="who"><div><div class="name">${esc(ME.nome)}</div><div class="foot">${esc(ME.loja||'Gestão')}</div></div><span class="lvl">${nivel(d)}</span></div>
+    <div class="stats"><div><b>${d}/${M.length}</b><span>temas concluídos</span></div><div><b>${acertos()}/${TOTQ}</b><span>respostas certas</span></div></div>
+    <div class="row"><button class="btn primary" type="button" id="cpres">Copiar meu resultado</button><button class="btn" type="button" id="pwbtn">Trocar senha</button></div>
+    <form id="pwform" novalidate hidden style="display:flex;flex-direction:column;gap:12px">
+      <label for="pw-new">Nova senha (mínimo 6 caracteres)<input id="pw-new" type="password" autocomplete="new-password" maxlength="60"></label>
+      <div class="foot" id="pw-msg"></div><div class="row"><button class="btn" type="submit">Salvar senha</button></div></form></div>`}
+function team(rows){rows=rows.filter(Boolean).sort((a,b)=>(+b.temas||0)-(+a.temas||0));
+  $('teamlist').innerHTML=rows.length?rows.map(r=>{const dt=new Date(r.atualizado);
+    return `<div class="trow"><div class="mid"><b>${esc(r.nome||'Sem nome')}</b><span>${esc(r.loja||'')}</span></div>
+    <div class="tr"><span class="lvl">${esc(r.nivel||'Iniciante')}</span><small>${+r.temas||0}/${M.length} temas · ${+r.acertos||0}/${TOTQ} acertos${isNaN(dt)?'':' · '+dt.toLocaleDateString('pt-BR')}</small></div></div>`}).join('')
+    :'<div class="lock">Ninguém respondeu o treinamento ainda. O nome e o nível aparecem aqui depois da primeira resposta.</div>'}
+function adminList(rows){rows.sort((a,b)=>String(a.nome).localeCompare(String(b.nome)));
+  $('adlist').innerHTML=rows.length?rows.map(r=>`<div class="trow"><div class="mid"><b>${esc(r.nome||'')}</b><span>${r.tipo==='loja'?'Loja':'Vendedora'} · usuário: ${esc(r.usuario||'')} · ${esc(r.loja||'')}</span></div>
+    <div class="tr"><span class="badge${r.ativo?' ok':''}">${r.ativo?'Ativo':'Bloqueado'}</span><button type="button" class="btn sm adblk" data-id="${esc(r.id)}" data-a="${r.ativo?'0':'1'}">${r.ativo?'Bloquear':'Desbloquear'}</button></div></div>`).join('')
+    :'<div class="lock">Nenhum acesso criado ainda. Preencha o formulário acima para cadastrar a primeira vendedora.</div>'}
+function lgErr(t){$('lg-err').textContent=t}
+function gtErr(t){$('gt-err').textContent=t}
+function catStatus(d){const dt=d?new Date(d):null;$('cat-status').textContent=dt&&!isNaN(dt)?'Tabela carregada em '+dt.toLocaleDateString('pt-BR')+'.':'Nenhuma tabela carregada ainda.'}
+function sessao(){document.querySelector('.wrap').classList.toggle('fechado',!LOJA);$('gate').hidden=!!LOJA;
+  const base=LOJA?(LOJA.tipo==='admin'?'Gestão':(LOJA.loja||LOJA.nome)):'';
+  $('quem').textContent=base+(ME&&!ME.admin?' · '+ME.nome:'');$('sair').hidden=!ME;
+  $('semcat').hidden=!LOJA||Object.keys(L).length>0;
+  $('equipe').hidden=!(ME&&ME.admin);$('admin').hidden=!(ME&&ME.admin);
+  if(TV!==null)fechar();else{temasHome();progress();ficha()}
+  oticaPadrao();if(window.htUser)window.htUser();show(CURV)}
+if(!cfgOk){gtErr('O acesso ainda não está ligado. Falta configurar o Firebase neste site.')}
+else{const la=firebase.initializeApp(FIREBASE_CONFIG),va=firebase.initializeApp(FIREBASE_CONFIG,'vend');
+  LAUTH=la.auth();LFS=la.firestore();AUTH=va.auth();FS=va.firestore();
+  LAUTH.onAuthStateChanged(async u=>{
+    if(lunsub){try{lunsub()}catch(_){}lunsub=null}
+    if(!u){LOJA=null;setCat(null);sessao();return}
+    try{const adm=u.email===ADMIN;let d={nome:'Gestor',loja:'',tipo:'admin'};
+      if(!adm){const sn=await LFS.doc('usuarios/'+u.uid).get();d=sn.exists?sn.data():null;
+        if(!d||d.ativo!==true){gtErr('Este acesso está bloqueado. Fale com o gestor.');await LAUTH.signOut();return}}
+      LOJA={uid:u.uid,nome:String(d.nome||''),loja:String(d.loja||''),tipo:adm?'admin':String(d.tipo||'vendedora')};gtErr('');
+      lunsub=LFS.doc('config/catalogo').onSnapshot(sn=>{let o=null;const dd=sn.exists?sn.data():null;try{o=dd?JSON.parse(dd.json):null}catch(_){}
+        setCat(o);catStatus(dd&&dd.atualizado);$('semcat').hidden=!LOJA||Object.keys(L).length>0},()=>{});
+      sessao();
+    }catch(e){gtErr('Não foi possível entrar agora. Confira a internet e tente de novo.');try{await LAUTH.signOut()}catch(_){}}
+  });
+  AUTH.onAuthStateChanged(async u=>{
+    unsubs.forEach(f=>{try{f()}catch(_){}});unsubs=[];
+    if(!u){ME=null;P={};sessao();return}
+    try{const adm=u.email===ADMIN;let nome='Gestor',loja='',usuario='admin';
+      if(!adm){const sn=await FS.doc('usuarios/'+u.uid).get(),d=sn.exists?sn.data():null;
+        if(!d||d.ativo!==true){lgErr('Seu acesso está bloqueado. Fale com o gestor.');await AUTH.signOut();return}
+        if(d.tipo==='loja'){lgErr('Este é o login da loja. Use o seu login pessoal.');await AUTH.signOut();return}
+        nome=String(d.nome||'');loja=String(d.loja||'');usuario=String(d.usuario||'')}
+      let p={};try{const ps=await FS.doc('progresso/'+u.uid).get();if(ps.exists)p=limpaP(ps.data().p)}catch(_){}
+      ME={uid:u.uid,nome:nome,loja:loja,usuario:usuario,admin:adm};P=p;lgErr('');sessao();
+      if(adm){unsubs.push(FS.collection('progresso').onSnapshot(s=>team(s.docs.map(d=>d.data())),()=>{}));
+        unsubs.push(FS.collection('usuarios').onSnapshot(s=>adminList(s.docs.map(d=>Object.assign({id:d.id},d.data()))),()=>{}))}
+      if(window.htStart)unsubs.push(window.htStart());
+    }catch(e){lgErr('Não foi possível entrar agora. Confira a internet e tente de novo.');try{await AUTH.signOut()}catch(_){}}
+  })}
+document.addEventListener('submit',async e=>{const id=e.target.id;
+  if(id==='gtform'){e.preventDefault();if(!cfgOk)return;const us=slug($('gt-user').value),pw=$('gt-pass').value;
+    if(!us||!pw){gtErr('Preencha usuário e senha.');return}
+    const b=e.target.querySelector('button');b.disabled=true;gtErr('');
+    try{await LAUTH.signInWithEmailAndPassword(us+DOM,pw);$('gt-pass').value='';
+      try{const u=LAUTH.currentUser;let tp='admin';
+        if(u.email!==ADMIN){const sn=await LFS.doc('usuarios/'+u.uid).get();tp=sn.exists?String(sn.data().tipo||'vendedora'):'loja'}
+        if(tp!=='loja')await AUTH.signInWithEmailAndPassword(us+DOM,pw)}catch(_){}}
+    catch(er){const c=(er&&er.code)||'';gtErr(c.indexOf('api-key')>=0?'A chave do projeto está incorreta neste site. Avise o gestor.':c==='auth/network-request-failed'?'Sem internet. Tente de novo.':c==='auth/too-many-requests'?'Muitas tentativas. Aguarde alguns minutos e tente de novo.':'Usuário ou senha incorretos.')}
+    b.disabled=false;return}
+  if(id==='lgform'){e.preventDefault();if(!cfgOk)return;const us=slug($('lg-user').value),pw=$('lg-pass').value;
+    if(!us||!pw){lgErr('Preencha usuário e senha.');return}
+    const b=e.target.querySelector('button');b.disabled=true;lgErr('');
+    try{await AUTH.signInWithEmailAndPassword(us+DOM,pw);$('lg-pass').value=''}
+    catch(er){const c=(er&&er.code)||'';lgErr(c.indexOf('api-key')>=0?'A chave do projeto está incorreta neste site. Avise o gestor.':c==='auth/network-request-failed'?'Sem internet. Tente de novo.':c==='auth/too-many-requests'?'Muitas tentativas. Aguarde alguns minutos e tente de novo.':'Usuário ou senha incorretos.')}
+    b.disabled=false;return}
+  if(id==='pwform'){e.preventDefault();const pw=$('pw-new').value,m=$('pw-msg');
+    if(pw.length<6){m.textContent='A senha precisa ter pelo menos 6 caracteres.';return}
+    try{await AUTH.currentUser.updatePassword(pw);$('pw-new').value='';m.textContent='Senha alterada.'}
+    catch(er){m.textContent=(er&&er.code)==='auth/requires-recent-login'?'Por segurança, saia, entre de novo e repita a troca.':'Não foi possível trocar a senha agora.'}
+    return}
+  if(id==='adform'){e.preventDefault();if(!ME||!ME.admin)return;const er=t=>{$('ad-err').textContent=t};
+    const tp=$('ad-tipo').value==='loja'?'loja':'vendedora',loja=$('ad-loja').value,nome=($('ad-nome').value.trim()||(tp==='loja'?loja:'')).slice(0,80),us=slug($('ad-user').value),pw=$('ad-pass').value;
+    if(nome.length<3){er('Digite o nome completo.');return}
+    if(tp==='loja'&&loja==='Outra'){er('Para acesso de loja, escolha a loja na lista.');return}
+    if(us.length<3||us==='admin'){er('Escolha um usuário com pelo menos 3 letras, sem espaços. Exemplo: ana.paula');return}
+    if(pw.length<6){er('A senha precisa ter pelo menos 6 caracteres.');return}
+    const b=e.target.querySelector('button');b.disabled=true;er('');
+    try{const sec=firebase.apps.find(a=>a.name==='sec')||firebase.initializeApp(FIREBASE_CONFIG,'sec');
+      const cr=await sec.auth().createUserWithEmailAndPassword(us+DOM,pw);
+      await FS.doc('usuarios/'+cr.user.uid).set({tipo:tp,nome:nome,usuario:us,loja:loja,ativo:true,criado:new Date().toISOString()});
+      try{await sec.auth().signOut()}catch(_){}
+      ['ad-nome','ad-user','ad-pass'].forEach(i=>{$(i).value=''});er(tp==='loja'?'Acesso da loja criado. Passe o usuário e a senha para a equipe da loja.':'Acesso criado. Passe o usuário e a senha para a vendedora.')}
+    catch(x){const c=(x&&x.code)||'';er(c==='auth/email-already-in-use'?'Esse usuário já existe. Escolha outro.':c==='auth/weak-password'?'A senha precisa ter pelo menos 6 caracteres.':'Não foi possível criar o acesso. Confira a internet.')}
+    b.disabled=false}
+});
+document.addEventListener('click',e=>{const t=e.target;
+  if(t.id==='sair'){if(AUTH)AUTH.signOut();return}
+  if(t.id==='sairloja'){if(AUTH)AUTH.signOut();if(LAUTH)LAUTH.signOut();return}
+  if(t.id==='cat-btn'&&ME&&ME.admin){const st=m=>{$('cat-status').textContent=m},f=$('cat-file').files[0];
+    if(!f){st('Escolha o arquivo catalogo.json antes de importar.');return}
+    f.text().then(tx=>{let o=null;try{o=JSON.parse(tx)}catch(_){}
+      if(!o||typeof o!=='object'||!Object.keys(o).length||!Object.values(o).every(l=>l&&Array.isArray(l.r))){st('Esse arquivo não é uma tabela válida. Use o catalogo.json enviado pelo Claude.');return}
+      return FS.doc('config/catalogo').set({json:JSON.stringify(o),atualizado:new Date().toISOString()}).then(()=>{st('Tabela importada. As lojas já veem os preços novos.');$('cat-file').value=''})
+    }).catch(()=>st('Não foi possível importar. Confira a internet e tente de novo.'));return}
+  if(t.id==='pwbtn'){const f=$('pwform');f.hidden=!f.hidden;return}
+  if(t.id==='cpres'&&ME){const d=feitos();
+    const tx=`CT - Equipe de Sucesso\n${ME.nome}${ME.loja?' · '+ME.loja:''}\nNível: ${nivel(d)}\nTemas concluídos: ${d}/${M.length}\nRespostas certas: ${acertos()}/${TOTQ}\nData: ${new Date().toLocaleDateString('pt-BR')}`;
+    const fim=m=>{t.textContent=m;setTimeout(()=>{t.textContent='Copiar meu resultado'},1800)};
+    try{navigator.clipboard.writeText(tx).then(()=>fim('Copiado'),()=>fim('Não foi possível copiar'))}catch(_){fim('Não foi possível copiar')}return}
+  const k=t.closest('.adblk');if(k&&ME&&ME.admin){k.disabled=true;FS.doc('usuarios/'+k.dataset.id).update({ativo:k.dataset.a==='1'}).catch(()=>{k.disabled=false})}
+});
+sessao();
+</script>
+<script>
+(function(){
+const MIN=2000;let docs=[],metas={},state='off';
+const pad=n=>String(n).padStart(2,'0');
+const mesAtual=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)};
+const hoje=()=>mesAtual()+'-'+pad(new Date().getDate());
+const dbr=d=>String(d||'').split('-').reverse().join('/');
+const err=t=>{$('ht-err').textContent=t};
+$('ht-loja').innerHTML=LOJAS.map(l=>`<option>${l}</option>`).join('');
+$('ht-mes').value=mesAtual();$('ht-data').value=hoje();
+$('ht-valor').addEventListener('input',e=>{const d=e.target.value.replace(/\D/g,'').slice(0,7);e.target.value=d?Number(d).toLocaleString('pt-BR'):''});
+function meu(){const d=docs.find(x=>x.id===(ME&&ME.uid));return d&&Array.isArray(d.itens)?d.itens.slice():[]}
+function salvar(itens){return FS.doc('ht/'+ME.uid).set({nome:ME.nome,loja:ME.loja,itens:itens,atualizado:new Date().toISOString()})}
+function render(){
+  const loja=$('ht-loja').value,mes=$('ht-mes').value||mesAtual();
+  if(state!=='ok'){$('ht-meta').innerHTML='';$('ht-rank').innerHTML='<div class="lock">'+(state==='load'?'Carregando os high tickets…':state==='off'?'Entre para ver os high tickets.':'Não foi possível carregar agora. Abra a página de novo mais tarde.')+'</div>';return}
+  const rows=docs.filter(r=>r.loja===loja).map(r=>{const it=(Array.isArray(r.itens)?r.itens:[]).filter(i=>i&&String(i.data||'').slice(0,7)===mes&&+i.valor>=MIN);
+    return {id:r.id,nome:String(r.nome||'Sem nome'),it:it,q:it.length,t:it.reduce((a,i)=>a+(+i.valor||0),0)}}).filter(r=>r.q>0||r.id===(ME&&ME.uid)).sort((a,b)=>b.q-a.q||b.t-a.t);
+  const q=rows.reduce((a,r)=>a+r.q,0),t=rows.reduce((a,r)=>a+r.t,0),meta=Math.max(0,Math.floor(+metas[loja]||0)),mx=Math.max(1,...rows.map(r=>r.q));
+  $('ht-meta').innerHTML=`<div class="card"><div class="who"><div><div class="name">${q}${meta?' de '+meta:''} high ticket${q===1&&!meta?'':'s'}</div><div class="foot">${esc(loja)} · ${dbr(mes)}</div></div>${meta&&q>=meta?'<span class="lvl">Meta batida</span>':''}</div>
+    ${meta?`<div class="htbar"><i style="width:${Math.min(100,q/meta*100)}%"></i></div>`:'<div class="foot">Meta do mês ainda não definida para esta loja.</div>'}
+    <div class="stats"><div><b>${brl(t)}</b><span>total em high tickets</span></div><div><b>${q?brl(t/q):brl(0)}</b><span>ticket médio</span></div></div></div>`;
+  $('ht-rank').innerHTML=rows.length?rows.map((r,k)=>`<details class="mod"><summary><span class="mt">${k+1}. ${esc(r.nome)}${r.id===(ME&&ME.uid)?' (você)':''}</span><span class="badge${k===0&&r.q?' ok':''}">${r.q} · ${brl(r.t)}</span></summary>
+    <div class="body"><div class="htbar"><i style="width:${r.q/mx*100}%"></i></div>${r.it.length?r.it.slice().sort((a,b)=>String(b.data).localeCompare(String(a.data))).map(i=>`<div class="htitem"><div>OS ${esc(i.os)} <span>· ${dbr(i.data)}</span></div><div>${brl(+i.valor)}${r.id===(ME&&ME.uid)?` <button type="button" class="btn sm htdel" data-os="${esc(i.os)}">Remover</button>`:''}</div></div>`).join(''):'<div class="foot">Nenhum high ticket neste mês ainda.</div>'}</div></details>`).join('')
+    :'<div class="lock">Nenhum high ticket registrado nesta loja neste mês. O primeiro registro aparece aqui.</div>';
+}
+$('ht-loja').addEventListener('change',()=>{$('ht-metaval').value=metas[$('ht-loja').value]||'';render()});
+$('ht-mes').addEventListener('change',render);
+document.addEventListener('submit',e=>{
+  if(e.target.id==='ht-metaform'){e.preventDefault();if(!FS||!ME||!ME.admin)return;const n=Math.floor(+$('ht-metaval').value.replace(/\D/g,'')||0),m=Object.assign({},metas);m[$('ht-loja').value]=n;
+    FS.doc('config/ht').set({metas:m}).catch(()=>{});return}
+  if(e.target.id!=='ht-form')return;e.preventDefault();err('');
+  if(!FS||!ME){err('Entre com seu usuário e senha para registrar.');return}
+  const os=$('ht-os').value.trim().slice(0,20),val=+$('ht-valor').value.replace(/\D/g,''),data=$('ht-data').value||hoje();
+  if(!os){err('Informe o número da OS.');return}
+  if(!(val>=MIN)){err('O high ticket começa em R$ 2.000,00.');return}
+  const itens=meu();if(itens.some(i=>i&&i.os===os)){err('Essa OS já está registrada por você.');return}
+  itens.push({os:os,valor:val,data:data});
+  const btn=e.target.querySelector('button');btn.disabled=true;
+  salvar(itens).then(()=>{$('ht-os').value='';$('ht-valor').value='';if(LOJAS.includes(ME.loja))$('ht-loja').value=ME.loja;$('ht-mes').value=data.slice(0,7);render()},
+    ()=>err('Não foi possível salvar. Confira a internet e tente de novo.')).finally(()=>{btn.disabled=false});
+});
+document.addEventListener('click',e=>{const b=e.target.closest('.htdel');if(!b||!FS||!ME)return;
+  if(!b.dataset.c){b.dataset.c='1';b.textContent='Confirmar remoção';return}
+  b.disabled=true;salvar(meu().filter(i=>i&&i.os!==b.dataset.os)).catch(()=>{b.disabled=false;b.textContent='Não foi possível remover'})});
+render();
+window.htUser=function(){$('ht-metaform').hidden=!(ME&&ME.admin);$('ht-reg').hidden=!!(ME&&ME.admin);
+  if(ME&&LOJAS.includes(ME.loja))$('ht-loja').value=ME.loja;if(!ME){docs=[];metas={};state='off'}render()};
+window.htStart=function(){state='load';render();const t=setTimeout(()=>{if(state==='load'){state='fail';render()}},10000);
+  const a=FS.collection('ht').onSnapshot(sn=>{clearTimeout(t);state='ok';docs=sn.docs.map(d=>Object.assign({id:d.id},d.data()||{}));render()},()=>{clearTimeout(t);state='fail';render()});
+  const b=FS.doc('config/ht').onSnapshot(sn=>{const d=sn.exists?sn.data():null;metas=(d&&d.metas)||{};if(document.activeElement!==$('ht-metaval'))$('ht-metaval').value=metas[$('ht-loja').value]||'';render()},()=>{});
+  return ()=>{clearTimeout(t);a();b()}};
+})();
+</script>
+</body>
+</html>

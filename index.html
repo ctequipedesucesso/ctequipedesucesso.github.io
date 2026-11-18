@@ -397,9 +397,9 @@ Object.entries({
 }).forEach(([k,w])=>{MAT[k].w=w});
 const CHK='Valor a confirmar com o gestor antes de fechar.';
 // linha: [material, variação, [hc,ar,sh,sky], esf mín, esf máx, cil máx, aviso]
-let L={},CONV=null,MODO='dig';
+let L={},CONV=null,MODO='dig',EXD=[],DX=[];
 const S={line:null,mat:null,vr:null,fin:null};
-function setCat(o){o=(o&&typeof o==='object')?o:{};const cv=o.convencionais;CONV=(cv&&Array.isArray(cv.itens))?cv:null;L=o.digitais&&typeof o.digitais==='object'?o.digitais:(cv?{}:o);['vsa','vss'].forEach(k=>{if(L[k]&&Array.isArray(L[k].r))L[k].r.forEach(r=>{r.ns=1})});S.line=S.mat=S.vr=S.fin=null;render()}
+function setCat(o){o=(o&&typeof o==='object')?o:{};const cv=o.convencionais;CONV=(cv&&Array.isArray(cv.itens))?cv:null;EXD=Array.isArray(o.extrasDigitais)?o.extrasDigitais.filter(x=>x&&x.id&&+x.p>0):[];DX=[];L=o.digitais&&typeof o.digitais==='object'?o.digitais:(cv?{}:o);['vsa','vss'].forEach(k=>{if(L[k]&&Array.isArray(L[k].r))L[k].r.forEach(r=>{r.ns=1})});S.line=S.mat=S.vr=S.fin=null;render()}
 const V=(v,ln)=>{ln=ln||S.line;return (L[ln].vn&&L[ln].vn[v])||VAR[v]};
 const F=(f,ln)=>{ln=ln||S.line;return (L[ln].fn&&L[ln].fn[f])||FIN[f]};
 function forca(){return Math.max(0,...eyes().map(e=>Math.max(Math.abs(e.s),Math.abs(e.s+e.c))))}
@@ -414,8 +414,11 @@ function rxTxt(){if(!RXI.some(i=>$(i).value))return null;const g=i=>$(i).value||
 function benef(){const l=L[S.line];return [[l.vs?'Tipo de lente':'Campo visual',l.b],['Índice',MAT[S.mat].d],['Proteção',V(S.vr).d],['Acabamento',F(S.fin).d]]}
 function omsg(t){const el=$('orcmsg');if(el)el.textContent=t}
 function need(){if(cli().nome.length<3){omsg('Preencha o nome do cliente no início da tela para gerar o orçamento.');$('cli-nome').scrollIntoView({behavior:'smooth',block:'center'});return false}return true}
-function orcDig(){const r=current();if(!r)return null;
-  return {nome:L[S.line].n,detalhe:[MAT[S.mat].n,V(S.vr).n,F(S.fin).n].join('  ·  '),lente:label(),ben:benef().map(b=>b[1]),valor:r[2][FK.indexOf(S.fin)],un:'Valor do par'}}
+function dxOk(){return current()&&!['foto','tr','pol'].includes(S.vr)?EXD:[]}
+function dxSel(){return dxOk().filter(x=>DX.includes(x.id))}
+function orcDig(){const r=current();if(!r)return null;const dx=dxSel();
+  return {nome:L[S.line].n,detalhe:[MAT[S.mat].n,V(S.vr).n,F(S.fin).n].concat(dx.map(x=>x.n)).join('  ·  '),lente:[label()].concat(dx.map(x=>x.n)).join(' · '),
+    ben:benef().map(b=>b[1]).concat(dx.map(x=>x.n+': '+x.d.charAt(0).toLowerCase()+x.d.slice(1))),valor:r[2][FK.indexOf(S.fin)]+dx.reduce((a,x)=>a+(+x.p),0),un:'Valor do par'}}
 function orc(){return MODO==='conv'?(window.orcConv?orcConv():null):orcDig()}
 function orcTexto(o){const c=cli(),rx=rxTxt(),v=vend();
   return ['Orçamento de lentes',c.otica,'','Cliente: '+c.nome+(c.tel?' · '+c.tel:''),'Data: '+new Date().toLocaleDateString('pt-BR')]
@@ -550,7 +553,7 @@ function label(){return [L[S.line].n,S.mat&&MAT[S.mat].n,S.vr&&V(S.vr).n,S.fin&&
 function summary(){
   const el=$('sum'),r=current();
   if(!S.line){el.hidden=true;$('blbl').textContent='Valor do par';$('bval').textContent='Escolha o campo visual';$('bval').className='val wait';$('copy').hidden=true;return}
-  const p=r?r[2][FK.indexOf(S.fin)]:minP(rows(S.line,S.mat,S.vr),S.fin);
+  const p0=r?r[2][FK.indexOf(S.fin)]:minP(rows(S.line,S.mat,S.vr),S.fin),p=r&&p0!=null?p0+dxSel().reduce((a,x)=>a+(+x.p),0):p0;
   $('blbl').textContent=r?'Valor do par':'A partir de';$('bval').textContent=p!=null?brl(p):'Indisponível';$('bval').className='val';$('copy').hidden=!r;
   const l=L[S.line];
   let li=`<li><span>${l.vs?'Tipo de lente':'Campo visual'}</span>${esc(l.b)}</li>`;
@@ -562,6 +565,7 @@ function summary(){
   if(r){const e=eyes().length&&!covers(r); if(e)extra+='<div class="flag">Atenção: o grau informado está fora da grade desta lente. Consulte o laboratório.</div>';
     else if(r[3]!=null)extra+=`<div class="foot">Grade: esférico ${range([r])}, ${r[5]?'cilíndrico até -'+r[5].toFixed(2).replace('.',','):'somente esférica'}.</div>`;
     if(r[6])extra+=`<div class="flag">${r[6]}</div>`}
+  const dxo=dxOk();if(dxo.length)extra+='<h3>Adicionais (opcional)</h3><div class="opts">'+dxo.map(x=>`<button type="button" class="opt" data-c="dx" data-dx="${esc(x.id)}" aria-pressed="${DX.includes(x.id)}"><span class="mid"><span class="t">${esc(x.n)}</span><span class="s">${esc(x.d)}</span></span><span class="p"><small>+</small>${brl(+x.p)}</span></button>`).join('')+'</div>';
   if(!l.work&&!l.vs)extra+='<div class="note"><b>Dica de 2º par:</b> o cliente passa mais de 3 horas por dia no computador? Ofereça também um par ALFA WORK.</div>';
   el.hidden=false;
   el.innerHTML=`<h2><span class="n">✓</span>O que o cliente leva</h2><div class="sum"><div class="name">${esc(label())}</div><ul>${li}</ul>${extra}
@@ -572,7 +576,7 @@ document.addEventListener('click',e=>{
   const sb=e.target.closest('.sg'); if(sb){const el=$(sb.dataset.for);el.value=el.value.replace(/[+-]/g,'');el.dataset.sg=el.dataset.sg==='-'?'+':'-';mask(el);sgBtn(el);render();return}
   const so=e.target.closest('.sugo'); if(so){const o=SUG[+so.dataset.s][1];S.line=o.line;S.mat=o.mat;S.vr=o.vr;S.fin=o.fin;render();$('sum').scrollIntoView({behavior:'smooth',block:'start'});return}
   const b=e.target.closest('.opt:not([data-c])'); if(b&&!b.disabled){const g=b.dataset.g,k=b.dataset.k;S[g]=S[g]===k?null:k;render();return}
-  if(e.target.id==='reset'){S.line=S.mat=S.vr=S.fin=null;if(window.convReset)convReset();RXI.concat(['cli-nome','cli-tel']).forEach(i=>{$(i).value=''});render();window.scrollTo({top:0});return}
+  if(e.target.id==='reset'){S.line=S.mat=S.vr=S.fin=null;DX=[];if(window.convReset)convReset();RXI.concat(['cli-nome','cli-tel']).forEach(i=>{$(i).value=''});render();window.scrollTo({top:0});return}
   if(e.target.id==='pdf'){baixar(e.target);return}
   const cb=e.target.closest('.cpo'); if(cb){const o=orc();if(!o||!need())return;
     const done=m=>{cb.textContent=m;setTimeout(()=>{cb.textContent='Copiar orçamento'},1800)};
@@ -655,6 +659,7 @@ function convRender(){const on=MODO==='conv';
     <div class="row"><button class="btn primary cpo" type="button">Copiar orçamento</button><button class="btn" type="button" id="pdf">Baixar PDF</button><button class="btn" type="button" id="reset">Novo atendimento</button></div></div>`}
 const _sumDig=summary;summary=function(){_sumDig();convRender()};
 document.addEventListener('click',e=>{
+  const dx=e.target.closest('.opt[data-dx]');if(dx){const k=dx.dataset.dx;DX=DX.includes(k)?DX.filter(x=>x!==k):DX.concat(k);render();return}
   const sg=e.target.closest('.segb');if(sg){MODO=sg.dataset.m==='conv'?'conv':'dig';try{localStorage.setItem('ct-modo',MODO)}catch(_){}render();return}
   const b=e.target.closest('.opt[data-c]');if(!b||b.disabled)return;const c=b.dataset.c,k=b.dataset.k;
   if(c==='t'){if(CV.t===k)convReset();else CV={t:k,id:null,ex:[]}}

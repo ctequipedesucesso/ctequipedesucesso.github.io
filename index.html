@@ -161,6 +161,45 @@ select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .segb[aria-pressed="true"]{background:var(--surface-2);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
 .segb:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sub{display:flex;flex-direction:column;gap:28px}
+.hthero{background:radial-gradient(120% 140% at 100% 0%,rgba(255,154,60,.28),transparent 60%),var(--surface);border:1.5px solid var(--accent);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.hthero .k{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hthero .big{font-family:var(--display);font-weight:800;font-size:clamp(34px,10vw,48px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.hthero .sub2{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+.hthero .sub2 b{font-family:var(--display);font-size:20px;display:block;font-variant-numeric:tabular-nums}
+.mbar{height:12px;border-radius:6px;background:var(--bg);overflow:hidden}
+.mbar i{display:block;height:100%;background:linear-gradient(90deg,#ff9a3c,#ffcf7a);border-radius:6px}
+.hot{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:4px 10px}
+.btnbig{width:100%;font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.04em;text-transform:uppercase;padding:16px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;box-shadow:0 6px 20px rgba(255,154,60,.25)}
+.btnbig:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.podio{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;gap:8px}
+.pd{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-width:0}
+.pd .av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:18px;background:var(--surface-2);border:2px solid var(--line);color:var(--fg)}
+.pd.p1 .av{width:64px;height:64px;font-size:22px;border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 4px rgba(255,154,60,.18)}
+.pd .nm{font-weight:600;font-size:13px;line-height:1.2;max-width:100%;overflow-wrap:anywhere}
+.pd .lj{font-size:11px;color:var(--muted)}
+.pd .st{width:100%;border-radius:10px 10px 0 0;background:var(--surface-2);display:flex;flex-direction:column;justify-content:flex-start;padding:10px 4px;gap:2px;font-variant-numeric:tabular-nums}
+.pd .st b{font-family:var(--display);font-size:22px}
+.pd .st small{font-size:11px;color:var(--muted)}
+.pd.p1 .st{height:120px;background:linear-gradient(180deg,rgba(255,154,60,.35),var(--surface-2))}
+.pd.p2 .st{height:92px}.pd.p3 .st{height:72px}
+.pd .pos{font-family:var(--display);font-weight:800;font-size:13px;color:var(--accent)}
+.lj-row{display:flex;flex-direction:column;gap:6px}
+.lj-row .top{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.lj-row .top b{font-variant-numeric:tabular-nums}
+.dest{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.dest div{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.dest small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dest b{font-family:var(--display);font-size:18px;color:var(--accent);font-variant-numeric:tabular-nums}
+.dest span{font-size:13px;overflow-wrap:anywhere}
+.feed{display:flex;flex-direction:column;gap:6px}
+.feed div{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border-radius:10px;padding:10px 12px;font-size:14px}
+.feed div b{color:var(--accent);font-variant-numeric:tabular-nums;flex:none}
+.feed div span{min-width:0}
+.feed small{color:var(--muted)}
+.minha{background:var(--surface);border:1.5px dashed var(--accent);border-radius:12px;padding:14px;font-size:15px}
+.minha b{color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:12px;padding:12px 16px;max-width:min(92vw,460px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#confete{position:fixed;inset:0;pointer-events:none;z-index:29}
 h2 small{font-family:var(--text);font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em}
 .wrap.fechado~.bar{display:none}
 #gate{gap:16px}
@@ -313,35 +352,39 @@ input[type=file]{font-size:14px}
   <div class="view" id="v-ht" hidden>
     <div>
       <h1>High Ticket</h1>
-      <p class="lead">Vendas a partir de R$ 2.000,00. Registre sua ordem de serviço e acompanhe a evolução da equipe da loja.</p>
+      <p class="lead">Vendas a partir de R$ 2.000,00. Cada OS registrada aparece na hora para toda a equipe.</p>
     </div>
-    <div class="card">
-      <label for="ht-loja">Loja<select id="ht-loja"></select></label>
-      <label for="ht-mes">Mês<input id="ht-mes" type="month"></label>
-    </div>
-    <section id="ht-meta"></section>
-    <form class="card" id="ht-metaform" novalidate hidden>
-      <label for="ht-metaval">Meta do mês para esta loja (quantidade de high tickets)<input id="ht-metaval" inputmode="numeric" autocomplete="off" maxlength="4"></label>
-      <div class="row"><button class="btn" type="submit">Salvar meta</button></div>
-    </form>
-    <section id="ht-reg">
+    <button type="button" class="btnbig" id="ht-cta">+ Registrar high ticket</button>
+    <section id="ht-reg" hidden>
       <h2><span class="n">+</span>Registrar high ticket</h2>
       <form class="card" id="ht-form" novalidate>
         <label for="ht-os">Número da OS<input id="ht-os" inputmode="numeric" autocomplete="off" maxlength="20"></label>
         <label for="ht-valor">Valor da venda (R$)<input id="ht-valor" inputmode="numeric" autocomplete="off"></label>
         <label for="ht-data">Data da venda<input id="ht-data" type="date"></label>
         <div class="err" id="ht-err"></div>
-        <div class="row"><button class="btn primary" type="submit">Registrar</button></div>
+        <div class="row"><button class="btn primary" type="submit">Registrar</button><button class="btn" type="button" id="ht-cancel">Cancelar</button></div>
       </form>
     </section>
+    <div class="seg" role="group" aria-label="Visão do High Ticket"><button type="button" class="segb segh" data-h="geral" aria-pressed="true">Painel geral</button><button type="button" class="segb segh" data-h="loja" aria-pressed="false">Por loja</button></div>
+    <div class="card"><label for="ht-mes">Mês<input id="ht-mes" type="month"></label><label for="ht-loja" id="ht-lojalbl" hidden>Loja<select id="ht-loja"></select></label></div>
+    <div class="sub" id="htg"></div>
+    <div class="sub" id="htl" hidden>
+    <section id="ht-meta"></section>
+    <form class="card" id="ht-metaform" novalidate hidden>
+      <label for="ht-metaval">Meta do mês para esta loja (quantidade de high tickets)<input id="ht-metaval" inputmode="numeric" autocomplete="off" maxlength="4"></label>
+      <div class="row"><button class="btn" type="submit">Salvar meta</button></div>
+    </form>
     <section>
       <h2><span class="n">★</span>Equipe da loja</h2>
       <div class="mods" id="ht-rank"><div class="lock">Carregando os high tickets…</div></div>
     </section>
+    </div>
     <p class="foot">Aqui entram só o número da OS, o valor e a data. Nenhum dado do cliente é registrado.</p>
   </div>
 </div>
 
+<canvas id="confete" hidden></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <div class="bar" id="bar"><div class="in">
   <div><span class="lbl" id="blbl"></span><div class="val" id="bval"></div></div>
   <button class="btn primary cpo" id="copy" type="button" hidden>Copiar orçamento</button>
@@ -663,7 +706,7 @@ function orcConv(){if(!CONV||CV.id==null)return null;const it=CONV.itens[CV.id];
     ben:cben(it).concat(ex.map(x=>x.n+': '+x.d.charAt(0).toLowerCase()+x.d.slice(1))),valor:tot,un:'Valor do par'}}
 function convRender(){const on=MODO==='conv';
   $('m-dig').hidden=on;$('m-conv').hidden=!on;
-  document.querySelectorAll('.segb').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.m==='conv')===on)));
+  document.querySelectorAll('.segb[data-m]').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.m==='conv')===on)));
   $('mlead').textContent=on?'Escolha acabada ou surfaçada, depois o índice de refração, o tratamento e os adicionais. Os benefícios aparecem a cada escolha e o valor atualiza no rodapé.':'Escolha o campo visual, depois o índice e os tratamentos. Os benefícios aparecem a cada escolha e o valor do par atualiza no rodapé.';
   $('mfoot').textContent=on?'Preços sugeridos ao consumidor, por par, conforme a tabela de lentes convencionais da Pousolentes. Confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.':'Preços sugeridos da ótica para o consumidor, por par, conforme o Catálogo ALFA. Em altos graus, confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.';
   if(!on)return;
@@ -704,7 +747,7 @@ function convRender(){const on=MODO==='conv';
 const _sumDig=summary;summary=function(){_sumDig();convRender()};
 document.addEventListener('click',e=>{
   const dx=e.target.closest('.opt[data-dx]');if(dx){const k=dx.dataset.dx;DX=DX.includes(k)?DX.filter(x=>x!==k):DX.concat(k);render();return}
-  const sg=e.target.closest('.segb');if(sg){MODO=sg.dataset.m==='conv'?'conv':'dig';try{localStorage.setItem('ct-modo',MODO)}catch(_){}render();return}
+  const sg=e.target.closest('.segb[data-m]');if(sg){MODO=sg.dataset.m==='conv'?'conv':'dig';try{localStorage.setItem('ct-modo',MODO)}catch(_){}render();return}
   const b=e.target.closest('.opt[data-c]');if(!b||b.disabled)return;const c=b.dataset.c,k=b.dataset.k;
   if(c==='s'){const it=CSUG[+k]&&CSUG[+k][1];if(it){CV={t:it.t,m:cmat(it),id:it.k,ex:[]};convRender();$('csum').scrollIntoView({behavior:'smooth',block:'start'})}return}
   if(c==='t'){if(CV.t===k)convReset();else CV={t:k,m:null,id:null,ex:[]}}
@@ -1011,7 +1054,7 @@ sessao();
 </script>
 <script>
 (function(){
-const MIN=2000;let docs=[],metas={},state='off';
+const MIN=2000;let docs=[],metas={},state='off',HV='geral',seen=null,shown=0;
 const pad=n=>String(n).padStart(2,'0');
 const mesAtual=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)};
 const hoje=()=>mesAtual()+'-'+pad(new Date().getDate());
@@ -1022,8 +1065,50 @@ $('ht-mes').value=mesAtual();$('ht-data').value=hoje();
 $('ht-valor').addEventListener('input',e=>{const d=e.target.value.replace(/\D/g,'').slice(0,7);e.target.value=d?Number(d).toLocaleString('pt-BR'):''});
 function meu(){const d=docs.find(x=>x.id===(ME&&ME.uid));return d&&Array.isArray(d.itens)?d.itens.slice():[]}
 function salvar(itens){return FS.doc('ht/'+ME.uid).set({nome:ME.nome,loja:ME.loja,itens:itens,atualizado:new Date().toISOString()})}
+const ini=n=>String(n||'?').trim().split(/\s+/).filter(Boolean).map((w,i,a)=>i===0||i===a.length-1?w[0]:'').join('').toUpperCase().slice(0,2);
+const pnome=n=>{const w=String(n||'').trim().split(/\s+/);return w.length>1?w[0]+' '+w[w.length-1][0]+'.':w[0]||'Sem nome'};
+function quando(i){const d=i.ts?new Date(i.ts):null,h=hoje();if(d&&!isNaN(d)){const m=Math.round((Date.now()-d)/60000);if(m<1)return 'agora';if(m<60)return 'há '+m+' min';if(m<1440)return 'há '+Math.round(m/60)+' h'}
+  if(i.data===h)return 'hoje';return dbr(i.data)}
+function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>{el.hidden=true},4500)}
+function confete(){if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=$('confete');c.hidden=false;c.width=innerWidth;c.height=innerHeight;const x=c.getContext('2d');
+  const cs=['#ff9a3c','#ffcf7a','#ffffff','#ff6b3d','#74d394'],P=Array.from({length:140},()=>({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,s:4+Math.random()*6,c:cs[Math.floor(Math.random()*cs.length)],r:Math.random()*6}));
+  let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});
+    if(++f<110)requestAnimationFrame(tick);else{x.clearRect(0,0,c.width,c.height);c.hidden=true}})()}
+function novos(){const ks=new Set();docs.forEach(r=>(Array.isArray(r.itens)?r.itens:[]).forEach(i=>{if(i&&+i.valor>=MIN)ks.add(r.id+'|'+i.os)}));
+  if(seen){const nv=[];ks.forEach(k=>{if(!seen.has(k))nv.push(k)});const of=nv.filter(k=>k.split('|')[0]!==(ME&&ME.uid));
+    if(of.length){const [id,os]=of[of.length-1].split('|'),r=docs.find(d=>d.id===id),it=r&&r.itens.find(i=>i.os===os);
+      if(r&&it){toast(pnome(r.nome)+' acabou de registrar um High Ticket de '+brl(+it.valor)+'!');confete()}}}
+  seen=ks}
+let anim=null;function contar(el,v){const de=+el.dataset.v||0;el.dataset.v=v;if(de===v||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){el.textContent=brl(v);return}
+  const t0=performance.now();cancelAnimationFrame(anim);(function f(t){const k=Math.min(1,(t-t0)/900),e=1-Math.pow(1-k,3);el.textContent=brl(Math.round(de+(v-de)*e));if(k<1)anim=requestAnimationFrame(f)})(t0)}
+function renderG(mes){const el=$('htg');
+  if(state!=='ok'){el.innerHTML='<div class="lock">'+(state==='load'?'Carregando o painel…':state==='off'?'Entre para ver o painel da equipe.':'Não foi possível carregar agora. Abra a página de novo mais tarde.')+'</div>';return}
+  const all=[];const rows=docs.map(r=>{const it=(Array.isArray(r.itens)?r.itens:[]).filter(i=>i&&String(i.data||'').slice(0,7)===mes&&+i.valor>=MIN);it.forEach(i=>all.push({r:r,i:i}));
+    return {id:r.id,nome:String(r.nome||'Sem nome'),loja:String(r.loja||''),q:it.length,t:it.reduce((a,i)=>a+(+i.valor||0),0),mx:Math.max(0,...it.map(i=>+i.valor||0))}}).filter(r=>r.q>0).sort((a,b)=>b.q-a.q||b.t-a.t);
+  const q=rows.reduce((a,r)=>a+r.q,0),t=rows.reduce((a,r)=>a+r.t,0),lojas=LOJAS.filter(l=>l!=='Outra'),mg=lojas.reduce((a,l)=>a+Math.max(0,Math.floor(+metas[l]||0)),0),pc=mg?Math.round(q/mg*100):0;
+  const me=ME&&!ME.admin?rows.findIndex(r=>r.id===ME.uid):-1;
+  let minha='';if(ME&&!ME.admin){if(me<0)minha='<div class="minha">Você ainda não registrou High Ticket neste mês. <b>O primeiro te coloca no ranking!</b></div>';
+    else if(me===0)minha='<div class="minha">Você está em <b>1º lugar</b> na equipe, com <b>'+rows[0].q+' high ticket'+(rows[0].q>1?'s':'')+'</b>. Continue assim!</div>';
+    else{const f=rows[me-1].q-rows[me].q+1;minha='<div class="minha">Você está em <b>'+(me+1)+'º lugar</b>. Faltam <b>'+f+' high ticket'+(f>1?'s':'')+'</b> para passar '+esc(pnome(rows[me-1].nome))+'.</div>'}}
+  const pod=[1,0,2].map(k=>{const r=rows[k];if(!r)return '<div></div>';return `<div class="pd p${k+1}"><div class="pos">${k+1}º</div><div class="av">${esc(ini(r.nome))}</div><div class="nm">${esc(pnome(r.nome))}</div><div class="lj">${esc(r.loja)}</div><div class="st"><b>${r.q}</b><small>${brl(r.t)}</small></div></div>`}).join('');
+  const lojasH=lojas.map(l=>{const lq=rows.filter(r=>r.loja===l).reduce((a,r)=>a+r.q,0),m=Math.max(0,Math.floor(+metas[l]||0)),mxq=Math.max(1,...lojas.map(x=>rows.filter(r=>r.loja===x).reduce((a,r)=>a+r.q,0))),w=m?Math.min(100,lq/m*100):lq/mxq*100;
+    return `<div class="lj-row"><div class="top"><span>${esc(l)}${m&&lq>=m?' <span class="hot">Meta batida</span>':''}</span><b>${lq}${m?' / '+m:''}</b></div><div class="mbar"><i style="width:${w}%"></i></div></div>`}).join('');
+  const top=all.slice().sort((a,b)=>(+b.i.valor)-(+a.i.valor))[0],ult=all.slice().sort((a,b)=>String(b.i.ts||b.i.data).localeCompare(String(a.i.ts||a.i.data))).slice(0,8);
+  el.innerHTML=`<div class="hthero"><div class="k">Equipe de Sucesso · ${dbr(mes)}</div><div class="big" id="htbig">${brl(0)}</div>
+    <div class="sub2"><div><b>${q}</b>high ticket${q===1?'':'s'}</div><div><b>${rows.length}</b>vendedora${rows.length===1?'':'s'} no ranking</div><div><b>${q?brl(t/q):brl(0)}</b>ticket médio</div></div>
+    ${mg?`<div class="mbar"><i style="width:${Math.min(100,pc)}%"></i></div><div class="foot">${pc>=100?'<span class="hot">Meta geral batida!</span> ':''}${q} de ${mg} na meta geral do mês (${pc}%)${q<mg?'. Faltam '+(mg-q)+'.':''}</div>`:'<div class="foot">A meta geral aparece quando o gestor define as metas das lojas.</div>'}</div>
+    ${minha}
+    <section><h2><span class="n">1</span>Pódio do mês</h2>${rows.length?'<div class="podio">'+pod+'</div>':'<div class="lock">Ninguém registrou High Ticket neste mês ainda. Quem vai abrir o placar?</div>'}</section>
+    ${rows.length>3?'<section><h2><span class="n">★</span>Ranking completo</h2><div class="feed">'+rows.slice(3).map((r,k)=>`<div><span>${k+4}º · ${esc(pnome(r.nome))} <small>· ${esc(r.loja)}</small></span><b>${r.q} · ${brl(r.t)}</b></div>`).join('')+'</div></section>':''}
+    <section><h2><span class="n">▲</span>Corrida das lojas</h2><div class="sub" style="gap:14px">${lojasH}</div></section>
+    ${top?`<section><h2><span class="n">◆</span>Destaques</h2><div class="dest"><div><small>Maior ticket</small><b>${brl(+top.i.valor)}</b><span>${esc(pnome(top.r.nome))}</span></div><div><small>Mais high tickets</small><b>${rows[0].q}</b><span>${esc(pnome(rows[0].nome))}</span></div><div><small>Loja líder</small><b>${(()=>{const s=lojas.map(l=>[l,rows.filter(r=>r.loja===l).reduce((a,r)=>a+r.q,0)]).sort((a,b)=>b[1]-a[1])[0];return s[1]+' HT'})()}</b><span>${esc(lojas.map(l=>[l,rows.filter(r=>r.loja===l).reduce((a,r)=>a+r.q,0)]).sort((a,b)=>b[1]-a[1])[0][0])}</span></div></div></section>`:''}
+    ${ult.length?'<section><h2><span class="n">●</span>Últimas conquistas</h2><div class="feed">'+ult.map(x=>`<div><span>${esc(pnome(x.r.nome))} <small>· ${esc(x.r.loja||'')} · ${quando(x.i)}</small></span><b>${brl(+x.i.valor)}</b></div>`).join('')+'</div></section>':''}`;
+  contar($('htbig'),t)}
 function render(){
   const loja=$('ht-loja').value,mes=$('ht-mes').value||mesAtual();
+  $('htg').hidden=HV!=='geral';$('htl').hidden=HV!=='loja';$('ht-lojalbl').hidden=HV!=='loja';
+  document.querySelectorAll('.segh').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.h===HV)));
+  renderG(mes);
   if(state!=='ok'){$('ht-meta').innerHTML='';$('ht-rank').innerHTML='<div class="lock">'+(state==='load'?'Carregando os high tickets…':state==='off'?'Entre para ver os high tickets.':'Não foi possível carregar agora. Abra a página de novo mais tarde.')+'</div>';return}
   const rows=docs.filter(r=>r.loja===loja).map(r=>{const it=(Array.isArray(r.itens)?r.itens:[]).filter(i=>i&&String(i.data||'').slice(0,7)===mes&&+i.valor>=MIN);
     return {id:r.id,nome:String(r.nome||'Sem nome'),it:it,q:it.length,t:it.reduce((a,i)=>a+(+i.valor||0),0)}}).filter(r=>r.q>0||r.id===(ME&&ME.uid)).sort((a,b)=>b.q-a.q||b.t-a.t);
@@ -1046,19 +1131,22 @@ document.addEventListener('submit',e=>{
   if(!os){err('Informe o número da OS.');return}
   if(!(val>=MIN)){err('O high ticket começa em R$ 2.000,00.');return}
   const itens=meu();if(itens.some(i=>i&&i.os===os)){err('Essa OS já está registrada por você.');return}
-  itens.push({os:os,valor:val,data:data});
+  itens.push({os:os,valor:val,data:data,ts:new Date().toISOString()});
   const btn=e.target.querySelector('button');btn.disabled=true;
-  salvar(itens).then(()=>{$('ht-os').value='';$('ht-valor').value='';if(LOJAS.includes(ME.loja))$('ht-loja').value=ME.loja;$('ht-mes').value=data.slice(0,7);render()},
+  salvar(itens).then(()=>{$('ht-os').value='';$('ht-valor').value='';$('ht-reg').hidden=true;$('ht-cta').hidden=!!(ME&&ME.admin);confete();toast('Mais um High Ticket de '+brl(val)+' para a conta! Parabéns, '+String(ME.nome).split(' ')[0]+'!');if(LOJAS.includes(ME.loja))$('ht-loja').value=ME.loja;$('ht-mes').value=data.slice(0,7);render()},
     ()=>err('Não foi possível salvar. Confira a internet e tente de novo.')).finally(()=>{btn.disabled=false});
 });
-document.addEventListener('click',e=>{const b=e.target.closest('.htdel');if(!b||!FS||!ME)return;
+document.addEventListener('click',e=>{const sh=e.target.closest('.segh');if(sh){HV=sh.dataset.h;render();return}
+  if(e.target.id==='ht-cta'){$('ht-reg').hidden=false;$('ht-cta').hidden=true;$('ht-os').focus();return}
+  if(e.target.id==='ht-cancel'){$('ht-reg').hidden=true;$('ht-cta').hidden=!ME||!!ME.admin;err('');return}
+  const b=e.target.closest('.htdel');if(!b||!FS||!ME)return;
   if(!b.dataset.c){b.dataset.c='1';b.textContent='Confirmar remoção';return}
   b.disabled=true;salvar(meu().filter(i=>i&&i.os!==b.dataset.os)).catch(()=>{b.disabled=false;b.textContent='Não foi possível remover'})});
 render();
-window.htUser=function(){$('ht-metaform').hidden=!(ME&&ME.admin);$('ht-reg').hidden=!!(ME&&ME.admin);
+window.htUser=function(){$('ht-metaform').hidden=!(ME&&ME.admin);$('ht-reg').hidden=true;$('ht-cta').hidden=!ME||!!ME.admin;
   if(ME&&LOJAS.includes(ME.loja))$('ht-loja').value=ME.loja;if(!ME){docs=[];metas={};state='off'}render()};
 window.htStart=function(){state='load';render();const t=setTimeout(()=>{if(state==='load'){state='fail';render()}},10000);
-  const a=FS.collection('ht').onSnapshot(sn=>{clearTimeout(t);state='ok';docs=sn.docs.map(d=>Object.assign({id:d.id},d.data()||{}));render()},()=>{clearTimeout(t);state='fail';render()});
+  seen=null;const a=FS.collection('ht').onSnapshot(sn=>{clearTimeout(t);state='ok';docs=sn.docs.map(d=>Object.assign({id:d.id},d.data()||{}));novos();render()},()=>{clearTimeout(t);state='fail';render()});
   const b=FS.doc('config/ht').onSnapshot(sn=>{const d=sn.exists?sn.data():null;metas=(d&&d.metas)||{};if(document.activeElement!==$('ht-metaval'))$('ht-metaval').value=metas[$('ht-loja').value]||'';render()},()=>{});
   return ()=>{clearTimeout(t);a();b()}};
 })();

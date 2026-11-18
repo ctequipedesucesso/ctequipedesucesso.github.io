@@ -258,6 +258,7 @@ input[type=file]{font-size:14px}
   <div class="sub" id="m-conv" hidden>
     <div class="lock" id="semconv" hidden>A tabela de lentes convencionais ainda não foi carregada. Peça ao gestor para importar a tabela.</div>
     <div class="note" id="ctipo" hidden></div>
+    <section id="csug" hidden></section>
     <section><h2><span class="n">1</span>Tipo de lente</h2><div class="opts" id="c1"></div></section>
     <section><h2><span class="n">2</span>Lente</h2><div id="c2"></div></section>
     <section><h2><span class="n">3</span>Adicionais <small>OPCIONAL</small></h2><div id="c3"></div></section>
@@ -596,7 +597,28 @@ const TIPOS={vsp:{n:'Visão simples pronta',d:'Lente de visão simples de estoqu
  bif:{n:'Bifocal',d:'Duas áreas de visão na mesma lente, longe e perto, separadas por uma linha visível.'},
  mf:{n:'Multifocal convencional',d:'Visão para longe, meia distância e perto na mesma lente, sem linha aparente.'},
  sol:{n:'Solar sem grau',d:'Lente solar sem grau, nas cores cinza, marrom ou G15.'}};
-let CV={t:null,id:null,ex:[]};
+let CV={t:null,id:null,ex:[]},CSUG=[];
+function cforca(){return Math.max(0,...eyes().map(e=>{const a=e.s,b=e.s+e.c,m=Math.min(a,b),M=Math.max(a,b);return Math.max(-Math.min(m,0),Math.max(M,0)*1.4)}))}
+function cmaxcil(){return Math.max(0,...eyes().map(e=>Math.abs(e.c)))}
+function cpref(){const f=cforca();return f<=2?['1.56','1.50','1.59','1.60','1.53','1.67','1.74']:f<=4?['1.59','1.56','1.60','1.67','1.50','1.53','1.74']:f<=6?['1.67','1.59','1.74','1.60','1.56']:['1.74','1.67','1.59']}
+function csugCalc(its){const tp=tipo();if(!tp)return null;
+  if(tp==='mf'){const mf=its.filter(i=>i.t==='mf'),by=n=>mf.find(i=>i.n===n),pr=mf.slice().sort((a,b)=>a.p-b.p);
+    const id=by('Varilux Comfort')||pr[pr.length-1],it=by('Adaptive Antirreflexo Externo')||pr[Math.floor(pr.length/2)],ec=by('No Line')||pr[0];
+    return {msg:'<b>Receita com adição: multifocal convencional.</b> Confira se a altura da armação atende a altura mínima de montagem de cada lente.',l:[['Lente ideal',id],['Intermediária',it],['Econômica',ec]]}}
+  const cyl=cmaxcil(),vsp=its.filter(i=>i.t==='vsp'&&cok(i)),surf=cyl>=2||!vsp.length,t=surf?'vss':'vsp';
+  const pool=its.filter(i=>i.t===t&&cok(i)&&!/INTERVIEW|ACCESS/i.test(i.n)),pref=cpref(),used=[];
+  const AR=i=>/ANTIRREFLEXO/i.test(i.n),FA=i=>/FILTRO AZUL/i.test(i.n),FO=i=>cfoto(i);
+  const pick=(ix,f)=>{for(const x of ix){const c=pool.filter(i=>i.i===x&&f(i)&&!used.includes(i)).sort((a,b)=>a.p-b.p)[0];if(c){used.push(c);return c}}return null};
+  const t2=pref.slice(0,2),t3=pref.slice(0,3);
+  const id=pick(t3,i=>AR(i)&&FA(i))||pick(t2,i=>AR(i)&&!FO(i))||pick(pref,i=>AR(i)&&!FO(i))||pick(pref,i=>!FO(i));
+  const it=pick(t3,i=>AR(i)&&!FA(i)&&!FO(i))||pick(pref,i=>AR(i)&&!FO(i))||pick(pref,i=>!FO(i));
+  const ecs=pool.filter(i=>!used.includes(i)&&!FO(i)).sort((a,b)=>a.p-b.p),ec=ecs.find(i=>t3.includes(i.i))||ecs[0]||null;
+  const why=cyl>=2?'Cilíndrico a partir de 2,00: indique lente <b>surfaçada</b>, feita sob medida.':surf?'Grau fora da grade das lentes prontas: indique lente <b>surfaçada</b>.':'Grau dentro da grade: lente <b>pronta</b>, com entrega mais rápida e melhor preço.';
+  return {msg:why+' Índice sugerido pela força do grau: <b>'+pref[0]+'</b>.',l:[['Lente ideal',id],['Intermediária',it],['Econômica',ec]].filter(x=>x[1])}}
+function csugRender(its){const el=$('csug'),r=csugCalc(its);CSUG=r?r.l:[];
+  if(!r){el.hidden=true;el.innerHTML='';return}el.hidden=false;
+  el.innerHTML='<h2><span class="n">★</span>Sugestão pelo grau</h2><div class="note">'+r.msg+'</div>'+(CSUG.length?'<div class="opts">'+CSUG.map((x,k)=>{const it=x[1];
+    return `<button type="button" class="opt${k===0?' best':''}" data-c="s" data-k="${k}"><span class="mid"><span class="s tier">${x[0]}</span><span class="t">${esc(TIPOS[it.t].n)}: ${esc(it.n)} ${it.i}</span><span class="s">${esc(cgrade(it))}</span></span><span class="p">${brl(cval(it.p))}</span></button>`}).join('')+'</div><p class="foot" style="margin:0">Toque em uma opção para carregar a lente. Ajuste conforme o uso e o orçamento do cliente.</p>':'<div class="lock">Nenhuma lente da tabela cobre esse grau. Consulte o laboratório.</div>')}
 function convReset(){CV={t:null,id:null,ex:[]}}
 const cval=p=>{const f=+(CONV&&CONV.fator)||1,u=(CONV&&CONV.unidade)==='lente'?2:1;return Math.round(p*f*u*100)/100};
 const cpoly=it=>/POLICARB/i.test(it.n)||(it.i==='1.59'&&!/RESINA/i.test(it.n));
@@ -633,12 +655,12 @@ function convRender(){const on=MODO==='conv';
   if(!on)return;
   $('semconv').hidden=!!CONV||!LOJA;
   const bar=(l,v,w,cp)=>{$('blbl').textContent=l;$('bval').textContent=v;$('bval').className='val'+(w?' wait':'');$('copy').hidden=!cp};
-  if(!CONV){['c1','c2','c3'].forEach(i=>{$(i).innerHTML=''});$('csum').hidden=true;$('ctipo').hidden=true;bar('Valor','Tabela não carregada',1,0);return}
+  if(!CONV){['c1','c2','c3'].forEach(i=>{$(i).innerHTML=''});$('csum').hidden=true;$('ctipo').hidden=true;$('csug').hidden=true;bar('Valor','Tabela não carregada',1,0);return}
   const tp=tipo(),hasRx=eyes().length>0,ok=tp==='mf'?['bif','mf','sol']:tp==='vs'?['vsp','vss','sol']:Object.keys(TIPOS);
   if(CV.t&&!ok.includes(CV.t))convReset();
   const its=CONV.itens.map((it,k)=>Object.assign({k:k},it));
   if(CV.id!=null&&(!its[CV.id]||its[CV.id].t!==CV.t))CV.id=null;
-  $('ctipo').hidden=!tp;$('ctipo').innerHTML=tp==='mf'?'<b>Receita com adição.</b> Opções de bifocal e multifocal convencional.':tp==='vs'?'<b>Receita sem adição.</b> Opções de visão simples pronta ou surfaçada.':'';
+  csugRender(its);$('ctipo').hidden=!tp||true;$('ctipo').innerHTML=tp==='mf'?'<b>Receita com adição.</b> Opções de bifocal e multifocal convencional.':tp==='vs'?'<b>Receita sem adição.</b> Opções de visão simples pronta ou surfaçada.':'';
   $('c1').innerHTML=ok.map(t=>{const l=its.filter(i=>i.t===t);if(!l.length)return '';const fit=l.filter(i=>!hasRx||cok(i));
     return cbtn('t',t,TIPOS[t].n,l.length+' opções',fit.length?Math.min(...fit.map(i=>cval(i.p))):null,true,CV.t===t,fit.length?'':'fora da grade')}).join('');
   if(!CV.t){$('c2').innerHTML='<div class="lock">Escolha o tipo de lente para ver as opções.</div>';$('c3').innerHTML='<div class="lock">Os adicionais aparecem depois da lente.</div>'}
@@ -662,6 +684,7 @@ document.addEventListener('click',e=>{
   const dx=e.target.closest('.opt[data-dx]');if(dx){const k=dx.dataset.dx;DX=DX.includes(k)?DX.filter(x=>x!==k):DX.concat(k);render();return}
   const sg=e.target.closest('.segb');if(sg){MODO=sg.dataset.m==='conv'?'conv':'dig';try{localStorage.setItem('ct-modo',MODO)}catch(_){}render();return}
   const b=e.target.closest('.opt[data-c]');if(!b||b.disabled)return;const c=b.dataset.c,k=b.dataset.k;
+  if(c==='s'){const it=CSUG[+k]&&CSUG[+k][1];if(it){CV={t:it.t,id:it.k,ex:[]};convRender();$('csum').scrollIntoView({behavior:'smooth',block:'start'})}return}
   if(c==='t'){if(CV.t===k)convReset();else CV={t:k,id:null,ex:[]}}
   else if(c==='l'){const n=+k;CV.id=CV.id===n?null:n;CV.ex=[]}
   else if(c==='x'){CV.ex=CV.ex.includes(k)?CV.ex.filter(x=>x!==k):CV.ex.concat(k)}

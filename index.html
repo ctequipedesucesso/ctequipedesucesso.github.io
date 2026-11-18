@@ -260,8 +260,9 @@ input[type=file]{font-size:14px}
     <div class="note" id="ctipo" hidden></div>
     <section id="csug" hidden></section>
     <section><h2><span class="n">1</span>Tipo de lente</h2><div class="opts" id="c1"></div></section>
-    <section><h2><span class="n">2</span>Lente</h2><div id="c2"></div></section>
-    <section><h2><span class="n">3</span>Adicionais <small>OPCIONAL</small></h2><div id="c3"></div></section>
+    <section><h2><span class="n">2</span>Material</h2><div id="cm"></div><div id="cmn"></div></section>
+    <section><h2><span class="n">3</span>Tratamento</h2><div id="c2"></div></section>
+    <section><h2><span class="n">4</span>Adicionais <small>OPCIONAL</small></h2><div id="c3"></div></section>
     <section id="csum" hidden></section>
   </div>
 
@@ -592,12 +593,24 @@ RXI.forEach(i=>{const el=$(i);el.addEventListener('input',()=>{mask(el);render()
 render();
 </script>
 <script>
-const TIPOS={vsp:{n:'Visão simples pronta',d:'Lente de visão simples de estoque: entrega mais rápida e melhor preço, para graus dentro da grade.'},
- vss:{n:'Visão simples surfaçada',d:'Lente de visão simples fabricada sob medida para a receita, para graus fora da grade das prontas.'},
+const TIPOS={vsp:{n:'Acabada (pronta)',d:'Lente de visão simples de estoque: entrega mais rápida e melhor preço, para graus dentro da grade.'},
+ vss:{n:'Surfaçada',d:'Lente de visão simples fabricada sob medida para a receita, para graus fora da grade das prontas.'},
  bif:{n:'Bifocal',d:'Duas áreas de visão na mesma lente, longe e perto, separadas por uma linha visível.'},
  mf:{n:'Multifocal convencional',d:'Visão para longe, meia distância e perto na mesma lente, sem linha aparente.'},
  sol:{n:'Solar sem grau',d:'Lente solar sem grau, nas cores cinza, marrom ou G15.'}};
-let CV={t:null,id:null,ex:[]},CSUG=[];
+let CV={t:null,m:null,id:null,ex:[]},CSUG=[];
+const MATC={'1.50':{n:'Resina 1.50',d:'Resina tradicional (CR 39): ótima nitidez e melhor preço, para graus baixos.'},
+ '1.53':{n:'Resina 1.53',d:'Resina de índice intermediário, usada nas lentes asféricas para graus positivos.'},
+ '1.56':{n:'Resina 1.56',d:'Um pouco mais fina que a 1.50. Bom equilíbrio entre estética e preço para graus baixos e moderados.'},
+ '1.59P':{n:'Policarbonato 1.59',d:'Leve e muito resistente a impactos. Indicado para crianças, esportes e armações parafusadas ou de fio de nylon.'},
+ '1.59R':{n:'Resina 1.59',d:'Resina de índice médio, mais fina que a 1.56.'},
+ '1.67':{n:'Alto índice 1.67',d:'Lente mais fina e leve, para graus médios e altos.'},
+ '1.74':{n:'Alto índice 1.74',d:'A lente mais fina da tabela, para graus altos.'}};
+const MORD=['1.50','1.53','1.56','1.59R','1.59P','1.67','1.74'];
+const cmat=it=>/POLICARB/i.test(it.n)?'1.59P':(it.i==='1.59'?'1.59R':it.i);
+function ctrat(it){if(/^CR 39 65/i.test(it.n))return 'Incolor (diâmetro 65 mm)';
+  let n=it.n.replace(/CR 39\s*/ig,'').replace(/Policarbonato\s*/ig,'').replace(/^Resina( 1\.59)?\s*/i,'').replace(/Alto Índice\s*/ig,'').replace(/\s+/g,' ').trim();
+  return n?n.charAt(0).toUpperCase()+n.slice(1):'Incolor'}
 function cforca(){return Math.max(0,...eyes().map(e=>{const a=e.s,b=e.s+e.c,m=Math.min(a,b),M=Math.max(a,b);return Math.max(-Math.min(m,0),Math.max(M,0)*1.4)}))}
 function cmaxcil(){return Math.max(0,...eyes().map(e=>Math.abs(e.c)))}
 function cpref(){const f=cforca();return f<=2?['1.56','1.50','1.59','1.60','1.53','1.67','1.74']:f<=4?['1.59','1.56','1.60','1.67','1.50','1.53','1.74']:f<=6?['1.67','1.59','1.74','1.60','1.56']:['1.74','1.67','1.59']}
@@ -618,8 +631,8 @@ function csugCalc(its){const tp=tipo();if(!tp)return null;
 function csugRender(its){const el=$('csug'),r=csugCalc(its);CSUG=r?r.l:[];
   if(!r){el.hidden=true;el.innerHTML='';return}el.hidden=false;
   el.innerHTML='<h2><span class="n">★</span>Sugestão pelo grau</h2><div class="note">'+r.msg+'</div>'+(CSUG.length?'<div class="opts">'+CSUG.map((x,k)=>{const it=x[1];
-    return `<button type="button" class="opt${k===0?' best':''}" data-c="s" data-k="${k}"><span class="mid"><span class="s tier">${x[0]}</span><span class="t">${esc(TIPOS[it.t].n)}: ${esc(it.n)} ${it.i}</span><span class="s">${esc(cgrade(it))}</span></span><span class="p">${brl(cval(it.p))}</span></button>`}).join('')+'</div><p class="foot" style="margin:0">Toque em uma opção para carregar a lente. Ajuste conforme o uso e o orçamento do cliente.</p>':'<div class="lock">Nenhuma lente da tabela cobre esse grau. Consulte o laboratório.</div>')}
-function convReset(){CV={t:null,id:null,ex:[]}}
+    return `<button type="button" class="opt${k===0?' best':''}" data-c="s" data-k="${k}"><span class="mid"><span class="s tier">${x[0]}</span><span class="t">${esc(TIPOS[it.t].n)} · ${esc(MATC[cmat(it)].n)} · ${esc(ctrat(it))}</span><span class="s">${esc(cgrade(it))}</span></span><span class="p">${brl(cval(it.p))}</span></button>`}).join('')+'</div><p class="foot" style="margin:0">Toque em uma opção para carregar a lente. Ajuste conforme o uso e o orçamento do cliente.</p>':'<div class="lock">Nenhuma lente da tabela cobre esse grau. Consulte o laboratório.</div>')}
+function convReset(){CV={t:null,m:null,id:null,ex:[]}}
 const cval=p=>{const f=+(CONV&&CONV.fator)||1,u=(CONV&&CONV.unidade)==='lente'?2:1;return Math.round(p*f*u*100)/100};
 const cpoly=it=>/POLICARB/i.test(it.n)||(it.i==='1.59'&&!/RESINA/i.test(it.n));
 const cfoto=it=>/FOTO|TRANSITIONS|PHOTOTECK|POLARIZ/i.test(it.n);
@@ -628,10 +641,8 @@ function cok(it){if(!it.e)return true;return eyes().every(e=>{let s=e.s,c=e.c;if
 function cfmt(v){return (v>0?'+':'')+v.toFixed(2).replace('.',',')}
 function cgrade(it){if(it.t==='mf')return 'Altura mínima de montagem: '+it.a+' mm';if(!it.e)return it.x||'Sem grau';
   return 'Grade '+cfmt(it.e[1])+' a '+cfmt(it.e[0])+(it.c!=null?' · cil até -'+it.c.toFixed(2).replace('.',','):'')}
-function cben(it){const n=it.n,b=[TIPOS[it.t].d];
+function cben(it){const n=it.n,b=[TIPOS[it.t].d,MATC[cmat(it)].d];
   if(/INTERVIEW|ACCESS/i.test(n))b.push('Lente ocupacional: foco em perto e meia distância, para computador e leitura.');
-  if(cpoly(it)&&it.t!=='sol')b.push('Policarbonato: leve e muito resistente a impactos. Indicado para crianças, esportes e armações parafusadas ou de fio de nylon.');
-  if(+it.i>=1.67)b.push('Alto índice: lente mais fina e leve, indicada para graus mais altos.');
   if(/ASPH/i.test(n))b.push('Asférica: lente mais plana, com visão mais natural nas bordas.');
   if(/ANTIRREFLEXO/i.test(n))b.push('Antirreflexo: menos reflexos e mais nitidez ao dirigir à noite e ao usar telas.');
   if(/FILTRO AZUL/i.test(n))b.push('Filtro azul: mais conforto visual diante de telas e iluminação LED.');
@@ -645,30 +656,38 @@ function cbtn(c,k,t,s2,price,from,on,off){return `<button type="button" class="o
   <span class="p">${off?'<small>'+off+'</small>':(price!=null?(from?'<small>a partir de</small>':(c==='x'?'<small>+</small>':''))+brl(price):'')}</span></button>`}
 function orcConv(){if(!CONV||CV.id==null)return null;const it=CONV.itens[CV.id];if(!it)return null;
   const ex=cex(it).filter(x=>CV.ex.includes(x.id));const tot=cval(it.p)+ex.reduce((a,x)=>a+cval(x.p),0);
-  return {nome:it.n+' '+it.i,detalhe:[TIPOS[it.t].n].concat(ex.map(x=>x.n)).join('  ·  '),lente:[TIPOS[it.t].n,it.n+' '+it.i].concat(ex.map(x=>x.n)).join(' · '),
+  return {nome:MATC[cmat(it)].n+' · '+ctrat(it),detalhe:[TIPOS[it.t].n].concat(ex.map(x=>x.n)).join('  ·  '),lente:[TIPOS[it.t].n,MATC[cmat(it)].n,ctrat(it)].concat(ex.map(x=>x.n)).join(' · '),
     ben:cben(it).concat(ex.map(x=>x.n+': '+x.d.charAt(0).toLowerCase()+x.d.slice(1))),valor:tot,un:'Valor do par'}}
 function convRender(){const on=MODO==='conv';
   $('m-dig').hidden=on;$('m-conv').hidden=!on;
   document.querySelectorAll('.segb').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.m==='conv')===on)));
-  $('mlead').textContent=on?'Escolha o tipo de lente, a lente e os adicionais. Os benefícios aparecem a cada escolha e o valor atualiza no rodapé.':'Escolha o campo visual, depois o índice e os tratamentos. Os benefícios aparecem a cada escolha e o valor do par atualiza no rodapé.';
+  $('mlead').textContent=on?'Escolha acabada ou surfaçada, depois o material, o tratamento e os adicionais. Os benefícios aparecem a cada escolha e o valor atualiza no rodapé.':'Escolha o campo visual, depois o índice e os tratamentos. Os benefícios aparecem a cada escolha e o valor do par atualiza no rodapé.';
   $('mfoot').textContent=on?'Preços sugeridos ao consumidor, por par, conforme a tabela de lentes convencionais da Pousolentes. Confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.':'Preços sugeridos da ótica para o consumidor, por par, conforme o Catálogo ALFA. Em altos graus, confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.';
   if(!on)return;
   $('semconv').hidden=!!CONV||!LOJA;
   const bar=(l,v,w,cp)=>{$('blbl').textContent=l;$('bval').textContent=v;$('bval').className='val'+(w?' wait':'');$('copy').hidden=!cp};
-  if(!CONV){['c1','c2','c3'].forEach(i=>{$(i).innerHTML=''});$('csum').hidden=true;$('ctipo').hidden=true;$('csug').hidden=true;bar('Valor','Tabela não carregada',1,0);return}
+  if(!CONV){['c1','cm','c2','c3'].forEach(i=>{$(i).innerHTML=''});$('csum').hidden=true;$('ctipo').hidden=true;$('csug').hidden=true;bar('Valor','Tabela não carregada',1,0);return}
   const tp=tipo(),hasRx=eyes().length>0,ok=tp==='mf'?['bif','mf','sol']:tp==='vs'?['vsp','vss','sol']:Object.keys(TIPOS);
   if(CV.t&&!ok.includes(CV.t))convReset();
-  const its=CONV.itens.map((it,k)=>Object.assign({k:k},it));
-  if(CV.id!=null&&(!its[CV.id]||its[CV.id].t!==CV.t))CV.id=null;
-  csugRender(its);$('ctipo').hidden=!tp||true;$('ctipo').innerHTML=tp==='mf'?'<b>Receita com adição.</b> Opções de bifocal e multifocal convencional.':tp==='vs'?'<b>Receita sem adição.</b> Opções de visão simples pronta ou surfaçada.':'';
-  $('c1').innerHTML=ok.map(t=>{const l=its.filter(i=>i.t===t);if(!l.length)return '';const fit=l.filter(i=>!hasRx||cok(i));
-    return cbtn('t',t,TIPOS[t].n,l.length+' opções',fit.length?Math.min(...fit.map(i=>cval(i.p))):null,true,CV.t===t,fit.length?'':'fora da grade')}).join('');
-  if(!CV.t){$('c2').innerHTML='<div class="lock">Escolha o tipo de lente para ver as opções.</div>';$('c3').innerHTML='<div class="lock">Os adicionais aparecem depois da lente.</div>'}
-  else{const l=its.filter(i=>i.t===CV.t).sort((a,b)=>(+a.i-+b.i)||(a.p-b.p));
-    $('c2').innerHTML='<div class="opts">'+l.map(i=>cbtn('l',i.k,esc(i.n)+' <span class="s" style="display:inline">· '+i.i+'</span>',esc(cgrade(i)),cval(i.p),false,CV.id===i.k,hasRx&&!cok(i)?'fora da grade':'')).join('')+'</div>';
-    if(CV.id==null)$('c3').innerHTML='<div class="lock">Escolha a lente para ver os adicionais.</div>';
-    else{const ex=cex(its[CV.id]);CV.ex=CV.ex.filter(x=>ex.some(y=>y.id===x));
-      $('c3').innerHTML=ex.length?'<div class="opts">'+ex.map(x=>cbtn('x',x.id,esc(x.n),esc(x.d),cval(x.p),false,CV.ex.includes(x.id),'')).join('')+'</div>':'<div class="lock">Esta lente não tem adicionais na tabela.</div>'}}
+  const its=CONV.itens.map((it,k)=>Object.assign({k:k},it)),fits=i=>!hasRx||cok(i),minp=l=>{const f=l.filter(fits);return f.length?Math.min(...f.map(i=>cval(i.p))):null};
+  if(CV.id!=null&&(!its[CV.id]||its[CV.id].t!==CV.t||cmat(its[CV.id])!==CV.m))CV.id=null;
+  csugRender(its);$('ctipo').hidden=true;
+  $('c1').innerHTML=ok.map(t=>{const l=its.filter(i=>i.t===t);if(!l.length)return '';const p=minp(l);
+    return cbtn('t',t,TIPOS[t].n,esc(TIPOS[t].d),p,true,CV.t===t,p==null?'fora da grade':'')}).join('');
+  const lockM='<div class="lock">Escolha o tipo de lente para ver os materiais.</div>',lockT='<div class="lock">Escolha o material para ver os tratamentos.</div>',lockX='<div class="lock">Os adicionais aparecem depois do tratamento.</div>';
+  if(!CV.t){$('cm').innerHTML=lockM;$('cmn').innerHTML='';$('c2').innerHTML=lockT;$('c3').innerHTML=lockX}
+  else{const lt=its.filter(i=>i.t===CV.t),ms=MORD.filter(m=>lt.some(i=>cmat(i)===m));
+    if(CV.m&&!ms.includes(CV.m))CV.m=null;if(!CV.m&&ms.length===1)CV.m=ms[0];
+    $('cm').innerHTML='<div class="opts">'+ms.map(m=>{const p=minp(lt.filter(i=>cmat(i)===m));return cbtn('m',m,MATC[m].n,esc(MATC[m].d),p,true,CV.m===m,p==null?'fora da grade':'')}).join('')+'</div>';
+    $('cmn').innerHTML='';
+    if(!CV.m){$('c2').innerHTML=lockT;$('c3').innerHTML=lockX}
+    else{const lm=lt.filter(i=>cmat(i)===CV.m).sort((a,b)=>a.p-b.p),cnt={};lm.forEach(i=>{const t=ctrat(i);cnt[t]=(cnt[t]||0)+1});
+      if(CV.id==null){const f=lm.filter(fits);const nm=[...new Set(lm.map(ctrat))];if(nm.length===1&&f.length)CV.id=f[0].k}
+      $('c2').innerHTML='<div class="opts">'+lm.map(i=>{const t=ctrat(i),lab=esc(t)+(cnt[t]>1&&i.c!=null?' <span class="s" style="display:inline">· cil até -'+i.c.toFixed(2).replace('.',',')+'</span>':'');
+        return cbtn('l',i.k,lab,esc(cgrade(i)),cval(i.p),false,CV.id===i.k,fits(i)?'':'fora da grade')}).join('')+'</div>';
+      if(CV.id==null)$('c3').innerHTML=lockX;
+      else{const ex=cex(its[CV.id]);CV.ex=CV.ex.filter(x=>ex.some(y=>y.id===x));
+        $('c3').innerHTML=ex.length?'<div class="opts">'+ex.map(x=>cbtn('x',x.id,esc(x.n),esc(x.d),cval(x.p),false,CV.ex.includes(x.id),'')).join('')+'</div>':'<div class="lock">Esta lente não tem adicionais na tabela.</div>'}}}
   const o=orcConv(),el=$('csum');
   if(!CV.t){el.hidden=true;bar('Valor do par','Escolha o tipo de lente',1,0);return}
   if(!o){el.hidden=true;const fit=its.filter(i=>i.t===CV.t&&(!hasRx||cok(i)));bar('A partir de',fit.length?brl(Math.min(...fit.map(i=>cval(i.p)))):'Indisponível',0,0);return}
@@ -684,8 +703,9 @@ document.addEventListener('click',e=>{
   const dx=e.target.closest('.opt[data-dx]');if(dx){const k=dx.dataset.dx;DX=DX.includes(k)?DX.filter(x=>x!==k):DX.concat(k);render();return}
   const sg=e.target.closest('.segb');if(sg){MODO=sg.dataset.m==='conv'?'conv':'dig';try{localStorage.setItem('ct-modo',MODO)}catch(_){}render();return}
   const b=e.target.closest('.opt[data-c]');if(!b||b.disabled)return;const c=b.dataset.c,k=b.dataset.k;
-  if(c==='s'){const it=CSUG[+k]&&CSUG[+k][1];if(it){CV={t:it.t,id:it.k,ex:[]};convRender();$('csum').scrollIntoView({behavior:'smooth',block:'start'})}return}
-  if(c==='t'){if(CV.t===k)convReset();else CV={t:k,id:null,ex:[]}}
+  if(c==='s'){const it=CSUG[+k]&&CSUG[+k][1];if(it){CV={t:it.t,m:cmat(it),id:it.k,ex:[]};convRender();$('csum').scrollIntoView({behavior:'smooth',block:'start'})}return}
+  if(c==='t'){if(CV.t===k)convReset();else CV={t:k,m:null,id:null,ex:[]}}
+  else if(c==='m'){CV.m=CV.m===k?null:k;CV.id=null;CV.ex=[]}
   else if(c==='l'){const n=+k;CV.id=CV.id===n?null:n;CV.ex=[]}
   else if(c==='x'){CV.ex=CV.ex.includes(k)?CV.ex.filter(x=>x!==k):CV.ex.concat(k)}
   convRender()});

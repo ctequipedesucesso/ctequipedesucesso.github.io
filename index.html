@@ -625,7 +625,7 @@ function convRender(){const on=MODO==='conv';
   $('m-dig').hidden=on;$('m-conv').hidden=!on;
   document.querySelectorAll('.segb').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.m==='conv')===on)));
   $('mlead').textContent=on?'Escolha o tipo de lente, a lente e os adicionais. Os benefícios aparecem a cada escolha e o valor atualiza no rodapé.':'Escolha o campo visual, depois o índice e os tratamentos. Os benefícios aparecem a cada escolha e o valor do par atualiza no rodapé.';
-  $('mfoot').textContent=on?'Valores da tabela de lentes convencionais da Pousolentes. Confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.':'Preços sugeridos da ótica para o consumidor, por par, conforme o Catálogo ALFA. Em altos graus, confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.';
+  $('mfoot').textContent=on?'Preços sugeridos ao consumidor, por par, conforme a tabela de lentes convencionais da Pousolentes. Confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.':'Preços sugeridos da ótica para o consumidor, por par, conforme o Catálogo ALFA. Em altos graus, confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.';
   if(!on)return;
   $('semconv').hidden=!!CONV||!LOJA;
   const bar=(l,v,w,cp)=>{$('blbl').textContent=l;$('bval').textContent=v;$('bval').className='val'+(w?' wait':'');$('copy').hidden=!cp};

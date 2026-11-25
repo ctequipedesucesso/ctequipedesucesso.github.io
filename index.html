@@ -200,6 +200,14 @@ select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .minha b{color:var(--accent)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:12px;padding:12px 16px;max-width:min(92vw,460px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 #confete{position:fixed;inset:0;pointer-events:none;z-index:29}
+.descrow{display:flex;gap:10px;align-items:flex-end}
+.descrow label{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.descseg{width:118px;flex:none}
+.tot{display:flex;flex-direction:column;gap:6px;border-top:1.5px solid var(--line);padding-top:12px;font-variant-numeric:tabular-nums}
+.tot div{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.tot .desc{color:var(--good)}
+.tot .final{font-family:var(--display);font-weight:800;font-size:22px;color:var(--accent)}
+.feed .cur{border:1.5px dashed var(--line);background:transparent}
 h2 small{font-family:var(--text);font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em}
 .wrap.fechado~.bar{display:none}
 #gate{gap:16px}
@@ -305,6 +313,16 @@ input[type=file]{font-size:14px}
     <section id="csum" hidden></section>
   </div>
 
+  <section id="orcbox" hidden>
+    <h2><span class="n">$</span>Orçamento final</h2>
+    <div class="sum">
+      <div class="feed" id="orclist"></div>
+      <div class="descrow"><label for="desc-v">Desconto<input id="desc-v" inputmode="decimal" autocomplete="off" placeholder="0"></label><div class="seg descseg" role="group" aria-label="Tipo de desconto"><button type="button" class="segb desct" data-dt="pct" aria-pressed="true">%</button><button type="button" class="segb desct" data-dt="rs" aria-pressed="false">R$</button></div></div>
+      <div class="tot" id="orctot"></div>
+      <div class="foot" id="orcmsg"></div>
+      <div class="row"><button class="btn primary cpo" type="button">Copiar orçamento</button><button class="btn" type="button" id="pdf">Baixar PDF</button><button class="btn" type="button" id="reset">Novo atendimento</button></div>
+    </div>
+  </section>
   <p class="foot" id="mfoot">Preços sugeridos da ótica para o consumidor, por par, conforme o Catálogo ALFA. Em altos graus, confirme a disponibilidade com o laboratório antes de fechar o pedido. A consulta apoia a venda e não substitui a receita.</p>
   </div>
 
@@ -465,14 +483,23 @@ function orcDig(){const r=current();if(!r)return null;const dx=dxSel();
   return {nome:L[S.line].n,detalhe:[MAT[S.mat].n,V(S.vr).n,F(S.fin).n].concat(dx.map(x=>x.n)).join('  ·  '),lente:[label()].concat(dx.map(x=>x.n)).join(' · '),
     ben:benef().map(b=>b[1]).concat(dx.map(x=>x.n+': '+x.d.charAt(0).toLowerCase()+x.d.slice(1))),valor:r[2][FK.indexOf(S.fin)]+dx.reduce((a,x)=>a+(+x.p),0),un:'Valor do par'}}
 function orc(){return MODO==='conv'?(window.orcConv?orcConv():null):orcDig()}
-function orcTexto(o){const c=cli(),rx=rxTxt(),v=vend();
-  return ['Orçamento de lentes',c.otica,'','Cliente: '+c.nome+(c.tel?' · '+c.tel:''),'Data: '+new Date().toLocaleDateString('pt-BR')]
-    .concat(rx?['','Receita:'].concat(rx.map(x=>x[0]+': esf '+x[1]+' | cil '+x[2]+(x[3]?' | ad '+x[3]:''))):[])
-    .concat(['','Lente: '+o.lente,'','O que você leva:']).concat(o.ben.map(b=>'• '+b))
-    .concat(['',o.un+': '+brl(o.valor)]).concat(v?['Atendimento: '+v]:[])
-    .filter((x,i,a)=>!(x===''&&a[i-1]==='')).join('\n')}
-function gerarPDF(o){const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),W=210,M=18,c=cli(),v=vend();
+let ITENS=[],DESC={t:'pct',v:0};
+function orcLista(){const c=orc();return ITENS.concat(c?[c]:[])}
+function totais(){const l=orcLista(),sub=Math.round(l.reduce((a,o)=>a+(+o.valor||0),0)*100)/100;
+  let d=DESC.t==='pct'?sub*Math.min(100,Math.max(0,DESC.v))/100:Math.min(sub,Math.max(0,DESC.v));d=Math.round(d*100)/100;
+  return {l:l,sub:sub,d:d,tot:Math.round((sub-d)*100)/100,multi:l.length>1||d>0}}
+function descLbl(){return 'Desconto'+(DESC.t==='pct'&&DESC.v>0?' ('+String(DESC.v).replace('.',',')+'%)':'')}
+function orcTexto(){const c=cli(),rx=rxTxt(),v=vend(),T=totais(),n=T.l.length;
+  let a=['Orçamento de lentes',c.otica,'','Cliente: '+c.nome+(c.tel?' · '+c.tel:''),'Data: '+new Date().toLocaleDateString('pt-BR')]
+    .concat(rx?['','Receita:'].concat(rx.map(x=>x[0]+': esf '+x[1]+' | cil '+x[2]+(x[3]?' | ad '+x[3]:''))):[]);
+  T.l.forEach((o,k)=>{a=a.concat(['',(n>1?'Lente '+(k+1)+': ':'Lente: ')+o.lente,'O que você leva:']).concat(o.ben.map(b=>'• '+b)).concat([o.un+': '+brl(o.valor)])});
+  if(T.multi){a.push('');if(n>1||T.d>0)a.push('Subtotal: '+brl(T.sub));if(T.d>0)a.push(descLbl()+': -'+brl(T.d));a.push('Total do orçamento: '+brl(T.tot))}
+  if(v)a.push('','Atendimento: '+v);
+  return a.filter((x,i,arr)=>!(x===''&&arr[i-1]==='')).join('\n')}
+function gerarPDF(){const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),W=210,M=18,c=cli(),v=vend(),T=totais(),n=T.l.length,R=x=>brl(x).replace(/ /g,' ');
   const lab=(t,x,y)=>{d.setFont('helvetica','bold');d.setFontSize(8);d.setTextColor(150,140,135);d.text(t,x,y,{charSpace:.6})};
+  const rod=()=>{d.setDrawColor(225,220,216);d.line(M,279,W-M,279);d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(130,122,118);d.text('Valores sujeitos a alteração sem aviso prévio.',M,285)};
+  const quebra=h=>{if(y+h>272){rod();d.addPage();y=22}};
   d.setFillColor(27,24,25);d.rect(0,0,W,44,'F');d.setFillColor(255,154,60);d.rect(0,44,W,1.6,'F');
   d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(255,154,60);d.text('ORÇAMENTO DE LENTES',M,16,{charSpace:.8});
   d.setFontSize(20);d.setTextColor(255,255,255);d.text((c.otica||'Ótica').toUpperCase(),M,28);
@@ -487,26 +514,39 @@ function gerarPDF(o){const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),W=2
   if(rx){lab('RECEITA',M,y);y+=6;d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(120,112,108);
     ['Esférico','Cilíndrico','Adição'].forEach((h,i)=>d.text(h,M+22+i*30,y));y+=6;d.setFontSize(11);d.setTextColor(27,24,25);
     rx.forEach(x=>{d.setFont('helvetica','bold');d.text(x[0],M,y);d.setFont('helvetica','normal');[x[1],x[2],x[3]].forEach((t,i)=>d.text(t||'',M+22+i*30,y));y+=6});y+=8}
-  d.setDrawColor(225,220,216);d.line(M,y-4,W-M,y-4);y+=5;
-  lab('SUA LENTE',M,y);d.setFont('helvetica','bold');d.setFontSize(17);d.setTextColor(27,24,25);d.text(o.nome,M,y+8,{maxWidth:W-2*M});
-  d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(80,74,72);const dl=d.splitTextToSize(o.detalhe,W-2*M);d.text(dl,M,y+15);
-  y+=29+(dl.length-1)*5;
-  lab('O QUE VOCÊ LEVA',M,y);y+=7;
-  o.ben.forEach(b=>{d.setFillColor(255,154,60);d.rect(M,y-2.7,2.2,2.2,'F');d.setFont('helvetica','normal');d.setFontSize(10.5);d.setTextColor(50,46,45);
-    const ls=d.splitTextToSize(b,W-2*M-7);d.text(ls,M+6,y);y+=ls.length*5+3});
-  y+=6;
+  T.l.forEach((o,k)=>{const dl=d.splitTextToSize(o.detalhe,W-2*M-50);quebra(40);
+    d.setDrawColor(225,220,216);d.line(M,y-4,W-M,y-4);y+=5;
+    lab(n>1?'LENTE '+(k+1):'SUA LENTE',M,y);
+    d.setFont('helvetica','bold');d.setFontSize(n>1?14:17);d.setTextColor(27,24,25);const nm=d.splitTextToSize(o.nome,W-2*M-50);d.text(nm,M,y+8);
+    if(n>1||T.d>0){d.setFontSize(14);d.text(R(o.valor),W-M,y+8,{align:'right'})}
+    y+=8+(nm.length-1)*6;d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(80,74,72);d.text(dl,M,y+7);y+=14+(dl.length-1)*5;
+    lab('O QUE VOCÊ LEVA',M,y);y+=7;
+    o.ben.forEach(b=>{d.setFont('helvetica','normal');d.setFontSize(10.5);const ls=d.splitTextToSize(b,W-2*M-7);quebra(ls.length*5+3);
+      d.setFillColor(255,154,60);d.rect(M,y-2.7,2.2,2.2,'F');d.setTextColor(50,46,45);d.text(ls,M+6,y);y+=ls.length*5+3});
+    y+=6});
+  if(T.multi){quebra(22);d.setFont('helvetica','normal');d.setFontSize(11);d.setTextColor(80,74,72);
+    if(n>1||T.d>0){d.text('Subtotal',M,y);d.text(R(T.sub),W-M,y,{align:'right'});y+=7}
+    if(T.d>0){d.setTextColor(40,140,80);d.text(descLbl(),M,y);d.text('- '+R(T.d),W-M,y,{align:'right'});y+=7}
+    y+=2}
+  quebra(30);
   d.setFillColor(255,154,60);d.roundedRect(M,y,W-2*M,26,3,3,'F');
-  d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(27,24,25);d.text(o.un.toUpperCase(),M+8,y+15,{charSpace:.6});
-  d.setFontSize(24);d.text(brl(o.valor).replace(/ /g,' '),W-M-8,y+17,{align:'right'});
-  d.setDrawColor(225,220,216);d.line(M,279,W-M,279);d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(130,122,118);
-  d.text('Valores sujeitos a alteração sem aviso prévio.',M,285);
+  d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(27,24,25);d.text(T.multi?'TOTAL DO ORÇAMENTO':T.l[0].un.toUpperCase(),M+8,y+15,{charSpace:.6});
+  d.setFontSize(24);d.text(R(T.tot),W-M-8,y+17,{align:'right'});
+  rod();
   return d.output('blob')}
-function baixar(btn){const o=orc();if(!o||!need())return;
+function baixar(btn){if(!orcLista().length||!need())return;
   if(!window.jspdf){omsg('Não foi possível gerar o PDF agora. Use Copiar orçamento.');return}
   try{const nome=cli().nome.normalize('NFD').replace(/[^\w ]/g,'').trim().replace(/ +/g,'-').toLowerCase();
-    const u=URL.createObjectURL(gerarPDF(o)),a=document.createElement('a');a.href=u;a.download='orcamento-'+(nome||'cliente')+'.pdf';
+    const u=URL.createObjectURL(gerarPDF()),a=document.createElement('a');a.href=u;a.download='orcamento-'+(nome||'cliente')+'.pdf';
     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);omsg('PDF baixado.')}
   catch(_){omsg('Não foi possível gerar o PDF. Use Copiar orçamento.')}}
+function orcRender(){const el=$('orcbox'),T=totais();if(!T.l.length){el.hidden=true;return}el.hidden=false;const cur=orc();
+  $('orclist').innerHTML=ITENS.map((o,k)=>`<div><span>${k+1}. ${esc(o.lente)}</span><b>${brl(o.valor)} <button type="button" class="btn sm orcdel" data-i="${k}">Remover</button></b></div>`).join('')
+    +(cur?`<div class="cur"><span>${ITENS.length+1}. ${esc(cur.lente)} <small>· em montagem</small></span><b>${brl(cur.valor)}</b></div>`:'');
+  $('orctot').innerHTML=(T.l.length>1||T.d>0?`<div><span>Subtotal</span><span>${brl(T.sub)}</span></div>`:'')+(T.d>0?`<div class="desc"><span>${esc(descLbl())}</span><span>- ${brl(T.d)}</span></div>`:'')
+    +`<div class="final"><span>Total</span><span>${brl(T.tot)}</span></div>`;
+  document.querySelectorAll('.desct').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.dt===DESC.t)));
+  if(ITENS.length||T.d>0){$('blbl').textContent='Total do orçamento';$('bval').textContent=brl(T.tot);$('bval').className='val';$('copy').hidden=false}}
 let SUG=[];
 function sugRender(tp){const el=$('sug');if(!tp){el.hidden=true;SUG=[];return}
   let c;
@@ -614,19 +654,24 @@ function summary(){
   if(!l.work&&!l.vs)extra+='<div class="note"><b>Dica de 2º par:</b> o cliente passa mais de 3 horas por dia no computador? Ofereça também um par ALFA WORK.</div>';
   el.hidden=false;
   el.innerHTML=`<h2><span class="n">✓</span>O que o cliente leva</h2><div class="sum"><div class="name">${esc(label())}</div><ul>${li}</ul>${extra}
-    <div class="foot" id="orcmsg"></div>
-    <div class="row">${r?'<button class="btn primary cpo" type="button">Copiar orçamento</button><button class="btn" type="button" id="pdf">Baixar PDF</button>':''}<button class="btn" type="button" id="reset">Novo atendimento</button></div></div>`;
+    ${r?'<div class="row"><button class="btn primary" type="button" id="addlente">+ Adicionar outra lente</button></div>':''}</div>`;
 }
 document.addEventListener('click',e=>{
   const sb=e.target.closest('.sg'); if(sb){const el=$(sb.dataset.for);el.value=el.value.replace(/[+-]/g,'');el.dataset.sg=el.dataset.sg==='-'?'+':'-';mask(el);sgBtn(el);render();return}
   const so=e.target.closest('.sugo'); if(so){const o=SUG[+so.dataset.s][1];S.line=o.line;S.mat=o.mat;S.vr=o.vr;S.fin=o.fin;render();$('sum').scrollIntoView({behavior:'smooth',block:'start'});return}
   const b=e.target.closest('.opt:not([data-c])'); if(b&&!b.disabled){const g=b.dataset.g,k=b.dataset.k;S[g]=S[g]===k?null:k;render();return}
-  if(e.target.id==='reset'){S.line=S.mat=S.vr=S.fin=null;DX=[];if(window.convReset)convReset();RXI.concat(['cli-nome','cli-tel']).forEach(i=>{$(i).value=''});render();window.scrollTo({top:0});return}
+  if(e.target.id==='reset'){S.line=S.mat=S.vr=S.fin=null;DX=[];ITENS=[];DESC={t:'pct',v:0};$('desc-v').value='';if(window.convReset)convReset();RXI.concat(['cli-nome','cli-tel']).forEach(i=>{$(i).value=''});render();window.scrollTo({top:0});return}
   if(e.target.id==='pdf'){baixar(e.target);return}
-  const cb=e.target.closest('.cpo'); if(cb){const o=orc();if(!o||!need())return;
+  if(e.target.id==='addlente'){const o=orc();if(!o)return;ITENS.push(o);if(MODO==='conv'){if(window.convReset)convReset()}else{S.line=S.mat=S.vr=S.fin=null;DX=[]}
+    render();omsg('Lente '+ITENS.length+' adicionada. Monte a próxima lente: digital ou convencional.');document.querySelector('.seg[aria-label="Tipo de orçamento"]').scrollIntoView({behavior:'smooth',block:'start'});return}
+  const od=e.target.closest('.orcdel');if(od){ITENS.splice(+od.dataset.i,1);render();return}
+  const dt=e.target.closest('.desct');if(dt){DESC.t=dt.dataset.dt;if(DESC.t==='pct'&&DESC.v>100){DESC.v=100;$('desc-v').value='100'}orcRender();return}
+  const cb=e.target.closest('.cpo'); if(cb){if(!orcLista().length||!need())return;
     const done=m=>{cb.textContent=m;setTimeout(()=>{cb.textContent='Copiar orçamento'},1800)};
-    try{navigator.clipboard.writeText(orcTexto(o)).then(()=>done('Copiado'),()=>done('Não foi possível copiar'))}catch(_){done('Não foi possível copiar')}}
+    try{navigator.clipboard.writeText(orcTexto()).then(()=>done('Copiado'),()=>done('Não foi possível copiar'))}catch(_){done('Não foi possível copiar')}}
 });
+$('desc-v').addEventListener('input',e=>{let t=e.target.value.replace(/[^\d,.]/g,'');e.target.value=t;let n=parseFloat(t.replace(/\./g,'').replace(',','.'))||0;
+  if(DESC.t==='pct'&&n>100){n=100;e.target.value='100'}DESC.v=n;orcRender()});
 $('cli-tel').addEventListener('input',e=>{const d=e.target.value.replace(/\D/g,'').slice(0,11);
   e.target.value=d.length<3?d:d.length<7?'('+d.slice(0,2)+') '+d.slice(2):'('+d.slice(0,2)+') '+d.slice(2,d.length-4)+'-'+d.slice(-4)});
 try{$('otica').value=localStorage.getItem('ct-otica')||''}catch(_){}
@@ -742,9 +787,9 @@ function convRender(){const on=MODO==='conv';
   if(it.x)extra+='<div class="flag">'+esc(it.x)+'</div>';
   el.hidden=false;
   el.innerHTML=`<h2><span class="n">✓</span>O que o cliente leva</h2><div class="sum"><div class="name">${esc(o.lente)}</div><ul>${o.ben.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>${extra}
-    <div class="foot" id="orcmsg"></div>
-    <div class="row"><button class="btn primary cpo" type="button">Copiar orçamento</button><button class="btn" type="button" id="pdf">Baixar PDF</button><button class="btn" type="button" id="reset">Novo atendimento</button></div></div>`}
+    <div class="row"><button class="btn primary" type="button" id="addlente">+ Adicionar outra lente</button></div></div>`}
 const _sumDig=summary;summary=function(){_sumDig();convRender()};
+const _convR=convRender;convRender=function(){_convR();orcRender()};
 document.addEventListener('click',e=>{
   const dx=e.target.closest('.opt[data-dx]');if(dx){const k=dx.dataset.dx;DX=DX.includes(k)?DX.filter(x=>x!==k):DX.concat(k);render();return}
   const sg=e.target.closest('.segb[data-m]');if(sg){MODO=sg.dataset.m==='conv'?'conv':'dig';try{localStorage.setItem('ct-modo',MODO)}catch(_){}render();return}
